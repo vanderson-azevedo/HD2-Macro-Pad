@@ -9,7 +9,7 @@ A ferramenta foi criada pensando principalmente em **acessibilidade**, para pess
 
 ## ✨ Recursos
 
-- Controle de Stratagems pelo celular
+- Controle de Stratagems pelo celular ou tablet
 - Loadout com 11 slots
 - Busca de Stratagems
 - Drag & Drop no desktop e mobile
@@ -19,7 +19,7 @@ A ferramenta foi criada pensando principalmente em **acessibilidade**, para pess
 
 ## ⚙️ Como funciona
 
-O servidor Flask roda no PC e disponibiliza uma interface web na rede local. O celular acessa essa interface e, ao selecionar um Stratagem, o servidor simula a sequência de teclas no PC utilizando `pyautogui`.
+O servidor Flask roda no PC e disponibiliza uma interface web na rede local. O dispositivo (Celular ou Tablet) acessa essa interface e, ao selecionar um Stratagem, o servidor simula a sequência de teclas no PC utilizando `pyautogui`.
 
 ## 🚀 Instalação rápida
 
@@ -30,14 +30,14 @@ pip install -r requirements.txt
 python server.py
 ```
 
-Depois, abra no celular o endereço informado pelo servidor, por exemplo:
+Depois, abra no dispositivo (Celular ou Tablet) o endereço informado pelo servidor, por exemplo:
 
 ```text
 http://192.168.1.105:5000
 ```
 
 > [!IMPORTANT]
-> O PC e o dispositivo (Tablet ou Celular) precisam estar na mesma rede.
+> O dispositivo (Celular ou Tablet) e o SERVIDOR (PC) precisam estar conectados à mesma rede local.
 
 ## 📖 Documentação
 

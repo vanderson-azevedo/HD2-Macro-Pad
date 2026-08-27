@@ -12,13 +12,13 @@ está configurado no `server.py`.
 
 Essa configuração já está prevista no projeto.
 
-## O celular não consegue acessar o servidor
+## O dispositivo (Celular ou Tablet) não consegue acessar o servidor
 
 Verifique:
 
-1. Se o PC e o celular estão na mesma rede Wi-Fi.
+1. Se o PC e o Celular ou Tablet estão na mesma rede Wi-Fi.
 2. O endereço IPv4 do PC com `ipconfig`.
-3. Se o endereço acessado no celular contém a porta `5000`.
+3. Se o endereço acessado no Celular ou Tablet contém a porta `5000`.
 
 Exemplo:
 
