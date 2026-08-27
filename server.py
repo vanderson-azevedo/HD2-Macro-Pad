@@ -1,11 +1,23 @@
 from flask import Flask, request, jsonify, send_from_directory
+from waitress import serve
 import pyautogui
 import time
 import threading
+import logging
+from datetime import datetime
 
 app = Flask(__name__)
 pyautogui.PAUSE = 0
 pyautogui.FAILSAFE = False
+
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+log = logging.getLogger('hd2')
+
+@app.after_request
+def log_request(response):
+    now = datetime.now().strftime('%H:%M:%S')
+    log.info(f'➡️ Comando Recebido | {request.remote_addr} | [{now}] "{request.method} {request.path}"')
+    return response
 
 STRATAGEMS = {
     # Eagle
@@ -136,6 +148,10 @@ def execute_stratagem(keys):
         time.sleep(0.1)
     pyautogui.keyUp("ctrl")
 
+@app.route("/ping")
+def ping():
+    return jsonify({"ok": True})
+
 @app.route("/")
 def index():
     return send_from_directory("web", "index.html")
@@ -147,11 +163,22 @@ def icons(filename):
 @app.route("/stratagem/<name>", methods=["POST"])
 def stratagem(name):
     if name not in STRATAGEMS:
+        print(f"[ERRO] Stratagem nao encontrado: {name}")
         return jsonify({"error": "Stratagem nao encontrado"}), 404
+    # print(f"[DISPARO] {name}")
     threading.Thread(target=execute_stratagem, args=(STRATAGEMS[name],), daemon=True).start()
     return jsonify({"ok": True, "stratagem": name})
 
 if __name__ == "__main__":
-    print("Servidor rodando! Acesse pelo seu dispositivo: http://<SEU_IP_LOCAL>:5000")
-    print("Nota: O seu dispositivo deve estar na mesma rede que o computador.")
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    print("==================================================================")
+    print("🚀 ┊ HD2-Macro-Pad ATIVO E RODANDO!")
+    print("==================================================================")
+    print("🌐 ┊ Acesse pelo seu dispositivo : http://<SEU_IP_LOCAL>:5000")
+    print("📌 ┊ Requisito: O dispositivo deve estar na MESMA REDE WI-FI DO PC.")
+    print("------------------------------------------------------------------")
+    print("⚠️ » ATENÇÃO: MANTENHA ESTA JANELA ABERTA ENQUANTO ESTIVER USANDO!")
+    print("🛑 » Para encerrar o servidor com segurança, pressione: Ctrl + C")
+    print("==================================================================\n")
+
+    # O serve deve ser a ÚLTIMA linha, pois ele bloqueia a execução do script
+    serve(app, host="0.0.0.0", port=5000)

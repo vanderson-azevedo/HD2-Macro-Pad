@@ -3,108 +3,200 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HD2 Stratagems</title>
+  <title>HD2-Macro-Pad</title>
+  <link rel="icon" type="image/png" sizes="16x16"  href="favicon.png">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Rajdhani:wght@600;700&display=swap');
+
+    :root {
+      --hd-yellow: #ffe800;
+      --hd-yellow-glow: rgba(255, 232, 0, 0.4);
+      --hd-dark-bg: #090b0e;
+      --hd-panel-bg: #10141b;
+      --hd-border-color: #ffe80033;
+      --hd-text-muted: #8b9bb4;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #080b10; color: #c9d1d9; font-family: 'Rajdhani','Segoe UI',sans-serif; min-height: 100vh; padding-bottom: 120px; }
 
-    /* HEADER */
-    header { background: linear-gradient(180deg,#0d1117,#080b10); border-bottom: 1px solid #f5c51830; padding: 12px 16px; text-align: center; position: sticky; top: 0; z-index: 20; }
-    header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: #f5c518; text-shadow: 0 0 20px #f5c51860; }
-    header p { font-size: 0.7rem; color: #555; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+    body {
+      background: var(--hd-dark-bg);
+      color: #e2e8f0;
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 140px;
+      position: relative;
+      overflow-x: hidden;
+    }
 
-    /* MODAL */
+    /* Linhas CRT */
+    body::before {
+      content: " "; display: block; position: fixed; inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px; z-index: 100; pointer-events: none; opacity: 0.6;
+    }
+
+    header {
+      background: #0d1117; border-bottom: 3px solid var(--hd-yellow);
+      padding: 10px 16px; text-align: center; position: sticky; top: 0; z-index: 20;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 15px var(--hd-yellow-glow);
+    }
+    header h1 {
+      font-family: 'Teko', sans-serif; font-size: 2rem; font-weight: 700;
+      letter-spacing: 4px; text-transform: uppercase; color: var(--hd-yellow);
+      text-shadow: 0 0 10px var(--hd-yellow-glow); line-height: 1;
+    }
+    header p {
+      font-size: 0.75rem; color: var(--hd-text-muted);
+      letter-spacing: 3px; text-transform: uppercase; font-weight: 700;
+    }
+
+    /* MODAL DE SELEÇÃO */
     #modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 50;
-      background: #000000cc; align-items: flex-end; justify-content: center;
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px);
+      align-items: flex-end; justify-content: center;
     }
     #modal-overlay.open { display: flex; }
     #modal {
-      background: #0d1117; border: 1px solid #f5c51840;
-      border-radius: 16px 16px 0 0; width: 100%; padding: 16px;
-      max-height: 80vh; display: flex; flex-direction: column; gap: 10px;
+      background: var(--hd-panel-bg); border: 2px solid var(--hd-yellow);
+      clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 0 100%);
+      width: 100%; padding: 16px; max-height: 80vh;
+      display: flex; flex-direction: column; gap: 12px;
+      box-shadow: 0 0 30px var(--hd-yellow-glow);
     }
     #modal-input {
-      width: 100%; padding: 10px 14px; border-radius: 20px;
-      background: #080b10; border: 1px solid #f5c51860;
-      color: #c9d1d9; font-family: 'Rajdhani','Segoe UI',sans-serif;
-      font-size: 1rem; outline: none;
+      width: 100%; padding: 12px 14px; background: #050709;
+      border: 1px solid var(--hd-yellow); color: var(--hd-yellow);
+      font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 700;
+      outline: none; text-transform: uppercase; letter-spacing: 2px;
     }
-    #modal-input::placeholder { color: #444; }
     #modal-results {
-      overflow-y: auto; display: grid;
-      grid-template-columns: repeat(3,1fr); gap: 8px;
+      overflow-y: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
     }
-    #modal-results .card { cursor: pointer; }
-    #modal-results .card.hidden { display: none; }
     #modal-close {
-      background: none; border: 1px solid #333; border-radius: 8px;
-      color: #888; padding: 8px; font-family: 'Rajdhani',sans-serif;
-      font-size: 0.8rem; letter-spacing: 1px; cursor: pointer;
+      background: var(--hd-yellow); border: none; color: #000; padding: 10px;
+      font-family: 'Teko', sans-serif; font-size: 1.2rem; font-weight: 700;
+      letter-spacing: 2px; cursor: pointer; text-transform: uppercase;
     }
 
-    /* SLOTS FIXOS NO FUNDO */
+    /* SLOTS DE LOADOUT */
     #loadout {
       position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
-      background: #0a0d13;
-      border-top: 1px solid #f5c51840;
-      padding: 8px 10px 10px;
+      background: #06080b; border-top: 2px solid var(--hd-yellow);
+      padding: 10px 10px 12px; box-shadow: 0 -10px 25px rgba(0,0,0,0.9);
     }
-    .loadout-label { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: #f5c518; margin-bottom: 6px; text-align: center; }
-    .slots-row { display: flex; gap: 6px; justify-content: center; }
+    .loadout-label {
+      font-family: 'Teko', sans-serif; font-size: 1.1rem; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--hd-yellow); margin-bottom: 4px;
+      text-align: center; text-shadow: 0 0 8px var(--hd-yellow-glow);
+    }
+    .slots-row { display: flex; gap: 6px; justify-content: center; margin-bottom: 4px; }
     .slot {
-      width: 68px; height: 68px;
-      border: 1px dashed #f5c51860;
-      border-radius: 8px;
-      background: #0d1117;
+      width: 64px; height: 64px; border: 2px solid #2a3342; background: #0c1017;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      font-size: 0.55rem; color: #444; letter-spacing: 1px; text-transform: uppercase;
-      position: relative; cursor: pointer; transition: border-color 0.2s;
+      font-size: 0.6rem; font-weight: 700; color: #445166; letter-spacing: 1px;
+      text-transform: uppercase; position: relative; cursor: pointer; transition: all 0.15s ease;
       -webkit-tap-highlight-color: transparent;
+      clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%, 0 10%);
     }
-    .slot.filled { border-style: solid; border-color: #f5c51880; }
-    .slot.filled img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 0 4px #f5c51860); }
-    .slot.filled span { font-size: 0.5rem; color: #c9d1d9; text-align: center; line-height: 1.1; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; padding: 0 2px; }
-    .slot.drag-over { border-color: #f5c518; background: #1a1f2e; }
+    .slot.filled {
+      border-color: var(--hd-yellow); background: #161c27;
+      box-shadow: inset 0 0 10px rgba(255, 232, 0, 0.15);
+    }
+    .slot.filled img { width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 0 4px var(--hd-yellow)); pointer-events: none; }
+    .slot.filled span { font-size: 0.55rem; color: #fff; text-align: center; font-weight: 700; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; padding: 0 2px; pointer-events: none; }
+    .slot.drag-over { border-color: var(--hd-yellow); background: #252e3d; transform: scale(1.05); }
     .slot .remove {
-      position: absolute; top: 2px; right: 4px;
-      font-size: 0.7rem; color: #f5c51880; line-height: 1;
-      display: none;
+      position: absolute; top: 2px; right: 4px; font-size: 0.75rem;
+      color: #ff4444; font-weight: 900; display: none;
+      pointer-events: auto; z-index: 10; padding: 3px; line-height: 1;
     }
     .slot.filled .remove { display: block; }
-    .slot.active-glow { border-color: #f5c518; box-shadow: 0 0 12px #f5c51860; }
+    .slot.active-glow { border-color: #ffffff; box-shadow: 0 0 20px var(--hd-yellow); transform: scale(0.95); }
 
-    /* LISTA */
-    main { padding: 14px; }
-    .section { margin-bottom: 22px; }
-    .section-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: #f5c518; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-    .section-title::after { content:''; flex:1; height:1px; background: linear-gradient(90deg,#f5c51840,transparent); }
-    .grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+    /* CARDS */
+    main { padding: 16px; }
+    .section { margin-bottom: 24px; }
+    .section-title {
+      font-family: 'Teko', sans-serif; font-size: 1.3rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2px; color: var(--hd-yellow);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::after {
+      content:''; flex:1; height:2px; background: linear-gradient(90deg, var(--hd-yellow), transparent);
+    }
+    .grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
 
     .card {
-      background: #0d1117; border: 1px solid #1e2530; border-radius: 10px;
-      color: #c9d1d9; padding: 10px 6px;
-      font-family: 'Rajdhani','Segoe UI',sans-serif; font-size: 0.7rem; font-weight: 500;
-      display: flex; flex-direction: column; align-items: center; gap: 5px;
-      transition: all 0.15s; position: relative; overflow: hidden;
+      background: #111620; border: 1px solid #222c3d; color: #e2e8f0;
+      padding: 12px 6px; font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 700;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      transition: transform 0.15s, border-color 0.15s; position: relative; overflow: hidden;
       -webkit-tap-highlight-color: transparent; cursor: grab; user-select: none;
+      clip-path: polygon(0 0, 88% 0, 100% 12%, 100% 100%, 0 100%);
     }
-    .card img { width: 50px; height: 50px; object-fit: contain; filter: drop-shadow(0 0 5px #f5c51840); pointer-events: none; }
-    .card span { line-height: 1.2; letter-spacing: 0.5px; text-align: center; pointer-events: none; }
-    .card.dragging { opacity: 0.4; }
-    .card:active { border-color: #f5c518; transform: scale(0.93); background: #131a24; }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+      background: transparent; transition: background 0.15s;
+    }
+    .card:hover::before { background: var(--hd-yellow); }
+    .card img { width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(0 0 4px rgba(255, 232, 0, 0.3)); pointer-events: none; }
+    .card span { line-height: 1.1; letter-spacing: 0.5px; text-align: center; pointer-events: none; text-transform: uppercase; }
+    .card.dragging { opacity: 0.3; }
 
     /* TOAST */
-    #toast { position: fixed; bottom: 130px; left: 50%; transform: translateX(-50%) translateY(10px); background: #f5c518; color: #080b10; padding: 9px 22px; border-radius: 30px; font-family: 'Rajdhani',sans-serif; font-size: 0.88rem; font-weight: 700; letter-spacing: 1px; opacity: 0; transition: opacity 0.25s, transform 0.25s; pointer-events: none; white-space: nowrap; box-shadow: 0 4px 20px #f5c51840; z-index: 30; }
+    #toast {
+      position: fixed; bottom: 140px; left: 50%;
+      transform: translateX(-50%) translateY(10px); background: var(--hd-yellow); color: #000;
+      padding: 10px 24px; clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%);
+      font-family: 'Teko', sans-serif; font-size: 1.3rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; opacity: 0;
+      transition: opacity 0.2s, transform 0.2s; pointer-events: none;
+      white-space: nowrap; box-shadow: 0 0 25px var(--hd-yellow-glow); z-index: 300;
+    }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* TELA DE ERRO DE CONEXÃO */
+    #offline-screen {
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: var(--hd-dark-bg); flex-direction: column;
+      align-items: center; justify-content: center; gap: 16px; text-align: center; padding: 32px;
+    }
+    #offline-screen.show { display: flex; }
+    #offline-screen .err-icon { font-size: 3rem; }
+    #offline-screen h2 {
+      font-family: 'Teko', sans-serif; font-size: 1.8rem; color: #ff4444;
+      letter-spacing: 3px; text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(255,68,68,0.5);
+    }
+    #offline-screen p { font-size: 0.9rem; color: var(--hd-text-muted); line-height: 1.6; max-width: 300px; }
+    #offline-screen code {
+      display: inline-block; background: #0d1117; border: 1px solid #ff444460;
+      color: #ff8888; padding: 2px 8px; font-size: 0.85rem; border-radius: 4px;
+    }
+    #offline-retry {
+      margin-top: 8px; background: none; border: 2px solid var(--hd-yellow);
+      color: var(--hd-yellow); padding: 10px 28px;
+      font-family: 'Teko', sans-serif; font-size: 1.2rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
+<div id="offline-screen">
+  <div class="err-icon">⚠️</div>
+  <h2>Servidor Offline</h2>
+  <p>Não foi possível conectar ao servidor.<br>Certifique-se que o <code>HD2-Macro-Pad</code> está rodando no PC e que você está na mesma rede.</p>
+  <button id="offline-retry">Tentar Novamente</button>
+</div>
+
 <header>
-  <h1>Helldivers 2</h1>
-  <p>Stratagem Panel</p>
+  <h1>HELLDIVERS 2</h1>
+  <p>★ Super Earth Tactical Command ★</p>
 </header>
 
 <div id="modal-overlay">
@@ -135,7 +227,6 @@
 </div>
 
 <main>
-
   <div class="section">
     <div class="section-title">🦅 Eagle</div>
     <div class="grid">
@@ -294,18 +385,19 @@
       <div class="card" data-id="portable_hellbomb" data-name="B-100 Portable Hellbomb"><img src="icons/Portable_Hellbomb_Stratagem_Icon_Background.svg"><span>Portable Hellbomb</span></div>
     </div>
   </div>
+</main>
 
 <div id="toast"></div>
 
-<footer style="text-align:center;padding:14px 0 6px;font-size:0.62rem;color:#444;letter-spacing:1px;font-family:'Rajdhani',sans-serif;">
-  💖 Feito com amor por <strong style="color:#f5c518;">Vanderson Azevedo</strong> pela Super Terra!
+<footer style="text-align:center;padding:14px 0 6px;font-size:0.62rem;color:#666;letter-spacing:1px;">
+  💖 Feito com amor por <strong style="color:var(--hd-yellow);">Vanderson Azevedo</strong> pela Super Terra!
 </footer>
 
 <script>
   const SLOTS = 11;
   const loadout = Array(SLOTS).fill(null);
   let dragData = null;
-  let longPressTimer = null;
+  let activeCard = null;
   let ghostEl = null;
 
   function saveLoadout() {
@@ -325,6 +417,14 @@
       const i = +slot.dataset.slot;
       const data = loadout[i];
       slot.innerHTML = '<span class="remove">✕</span>';
+      const removeBtn = slot.querySelector('.remove');
+      removeBtn.addEventListener('touchend', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        loadout[i] = null;
+        renderSlots();
+        saveLoadout();
+      });
       if (data) {
         slot.classList.add('filled');
         const img = document.createElement('img');
@@ -342,11 +442,10 @@
     });
   }
 
-  // Toque nos slots: usar ou remover
   document.querySelectorAll('.slot').forEach(slot => {
     slot.addEventListener('click', e => {
       const i = +slot.dataset.slot;
-      if (e.target.classList.contains('remove')) {
+      if (e.target.closest('.remove')) {
         loadout[i] = null;
         renderSlots();
         saveLoadout();
@@ -361,23 +460,23 @@
     if (slotEl) { slotEl.classList.add('active-glow'); setTimeout(() => slotEl.classList.remove('active-glow'), 400); }
     showToast(name);
     try {
-      const res = await fetch('/stratagem/' + id, { method: 'POST' });
-      if (!res.ok) showToast('Erro!');
-    } catch { showToast('Sem conexão!'); }
+      await fetch('/stratagem/' + id, { method: 'POST' });
+    } catch {}
   }
 
-  // --- DRAG & DROP TOUCH ---
+  /* --- SISTEMA DE DRAG & DROP REVISADO --- */
   function createGhost(card) {
     ghostEl = card.cloneNode(true);
-    ghostEl.style.cssText = 'position:fixed;opacity:0.85;pointer-events:none;z-index:999;width:80px;border-radius:10px;background:#1a1f2e;border:1px solid #f5c518;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:0.65rem;font-family:Rajdhani,sans-serif;color:#c9d1d9;';
-    ghostEl.querySelector('img').style.cssText = 'width:44px;height:44px;';
+    ghostEl.style.cssText = 'position:fixed;opacity:0.9;pointer-events:none;z-index:999;width:75px;background:#161c27;border:2px solid #ffe800;padding:6px;display:flex;flex-direction:column;align-items:center;clip-path:polygon(0 0, 88% 0, 100% 12%, 100% 100%, 0 100%);box-shadow:0 0 15px rgba(255,232,0,0.5);';
+    ghostEl.querySelector('img').style.cssText = 'width:36px;height:36px;';
+    ghostEl.querySelector('span').style.cssText = 'font-size:0.55rem;color:#fff;text-align:center;font-weight:700;margin-top:2px;';
     document.body.appendChild(ghostEl);
   }
 
   function moveGhost(x, y) {
     if (!ghostEl) return;
-    ghostEl.style.left = (x - 40) + 'px';
-    ghostEl.style.top = (y - 40) + 'px';
+    ghostEl.style.left = (x - 37) + 'px';
+    ghostEl.style.top = (y - 37) + 'px';
   }
 
   function removeGhost() {
@@ -390,6 +489,7 @@
   }
 
   function startDrag(card, x, y) {
+    activeCard = card;
     dragData = { id: card.dataset.id, name: card.dataset.name, img: card.querySelector('img').src };
     card.classList.add('dragging');
     createGhost(card);
@@ -413,23 +513,39 @@
       saveLoadout();
     }
     document.querySelectorAll('.slot').forEach(s => s.classList.remove('drag-over'));
-    document.querySelectorAll('.card').forEach(c => c.classList.remove('dragging'));
+    if (activeCard) activeCard.classList.remove('dragging');
     removeGhost();
     dragData = null;
+    activeCard = null;
   }
 
-  document.querySelectorAll('.card').forEach(card => {
-    // Touch - long press
+  function initCardEvents(card) {
+    let longPressTimer = null;
+    let touchMoved = false;
+
+    card.addEventListener('mousedown', e => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      startDrag(card, e.clientX, e.clientY);
+    });
+
     card.addEventListener('touchstart', e => {
+      touchMoved = false;
       const touch = e.touches[0];
       longPressTimer = setTimeout(() => {
-        startDrag(card, touch.clientX, touch.clientY);
-        navigator.vibrate && navigator.vibrate(40);
+        if (!touchMoved) {
+          startDrag(card, touch.clientX, touch.clientY);
+          navigator.vibrate && navigator.vibrate(40);
+        }
       }, 350);
     }, { passive: true });
 
     card.addEventListener('touchmove', e => {
-      if (!dragData) { clearTimeout(longPressTimer); return; }
+      if (!dragData) {
+        touchMoved = true;
+        clearTimeout(longPressTimer);
+        return;
+      }
       e.preventDefault();
       const touch = e.touches[0];
       moveDrag(touch.clientX, touch.clientY);
@@ -437,25 +553,18 @@
 
     card.addEventListener('touchend', e => {
       clearTimeout(longPressTimer);
+      if (!dragData) return;
       const touch = e.changedTouches[0];
       endDrag(touch.clientX, touch.clientY);
     });
 
     card.addEventListener('touchcancel', () => {
       clearTimeout(longPressTimer);
-      document.querySelectorAll('.card').forEach(c => c.classList.remove('dragging'));
-      document.querySelectorAll('.slot').forEach(s => s.classList.remove('drag-over'));
-      removeGhost();
-      dragData = null;
+      if (dragData) endDrag(-1, -1);
     });
+  }
 
-    // Mouse drag
-    card.addEventListener('mousedown', e => {
-      if (e.button !== 0) return;
-      e.preventDefault();
-      startDrag(card, e.clientX, e.clientY);
-    });
-  });
+  document.querySelectorAll('main .card').forEach(initCardEvents);
 
   document.addEventListener('mousemove', e => {
     if (!dragData) return;
@@ -478,7 +587,20 @@
 
   loadSaved();
 
-  // Modal de busca ao clicar em slot vazio
+  // Verifica conexão com o servidor
+  async function checkServer() {
+    try {
+      const res = await fetch('/ping', { method: 'GET', cache: 'no-store' });
+      if (!res.ok) throw new Error();
+      document.getElementById('offline-screen').classList.remove('show');
+    } catch {
+      document.getElementById('offline-screen').classList.add('show');
+    }
+  }
+  document.getElementById('offline-retry').addEventListener('click', checkServer);
+  checkServer();
+
+  // Modal de busca
   let targetSlot = null;
   const overlay = document.getElementById('modal-overlay');
   const modalInput = document.getElementById('modal-input');
