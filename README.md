@@ -55,11 +55,11 @@ O servidor Flask roda no PC e expõe uma interface web acessível por qualquer d
 
 **1. Clone o repositório**
 ```bash
-git clone https://github.com/vanderson-azevedo/Auto-Stratagems-HD2.git
-cd Auto-Stratagems-HD2
+git clone https://github.com/vanderson-azevedo/HD2-Macro-Pad.git
+cd HD2-Macro-Pad
 ```
 
-Ou baixe o ZIP direto na página de [**Releases**](https://github.com/vanderson-azevedo/Auto-Stratagems-HD2/releases) e extraia em qualquer pasta.
+Ou baixe o ZIP direto na página de [**Releases**](https://github.com/vanderson-azevedo/HD2-Macro-Pad/releases) e extraia em qualquer pasta.
 
 **2. Instale as dependências**
 ```bash
@@ -211,7 +211,7 @@ Reinforce, Resupply, SOS Beacon, Hellbomb, Super Earth Flag
 ## Estrutura do Projeto
 
 ```
-HD2 - keybinds/
+HD2-Macro-Pad/
 ├── server.py           # Servidor Flask + mapeamento de stratagems
 ├── requirements.txt    # Dependências Python
 ├── README.md
