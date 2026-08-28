@@ -39,6 +39,8 @@ http://192.168.1.105:5000
 > [!IMPORTANT]
 > O dispositivo (Celular ou Tablet) e o SERVIDOR (PC) precisam estar conectados à mesma rede local.
 
+![ ](https://i.ibb.co/RGDPDrts/Sem-T-tulo-1.png)
+
 ## 📖 Documentação
 
 - [Instalação](docs/installation.md)
