@@ -1,0 +1,5 @@
+waitress
+flask
+pyautogui
+pillow
+pystray

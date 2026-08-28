@@ -1,0 +1,19 @@
+
+### Batch ###
+# BatchFiles
+*.bat
+
+# IconFiles
+*.ico
+
+# ImageFiles
+*.png
+
+# ServerSpecFiles
+.spec
+
+# Folders
+build
+dist
+
+# End

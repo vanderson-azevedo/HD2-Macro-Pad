@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HD2-Macro-Pad</title>
+  <link rel="icon" type="image/png" sizes="16x16"  href="icons/favicon.png">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Rajdhani:wght@600;700&display=swap');
+
+    :root {
+      --hd-yellow: #ffe800;
+      --hd-yellow-glow: rgba(255, 232, 0, 0.4);
+      --hd-dark-bg: #090b0e;
+      --hd-panel-bg: #10141b;
+      --hd-border-color: #ffe80033;
+      --hd-text-muted: #8b9bb4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--hd-dark-bg);
+      color: #e2e8f0;
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 140px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Linhas CRT */
+    body::before {
+      content: " "; display: block; position: fixed; inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px; z-index: 100; pointer-events: none; opacity: 0.6;
+    }
+
+    header {
+      background: #0d1117; border-bottom: 3px solid var(--hd-yellow);
+      padding: 10px 16px; text-align: center; position: sticky; top: 0; z-index: 20;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 15px var(--hd-yellow-glow);
+    }
+    header h1 {
+      font-family: 'Teko', sans-serif; font-size: 2rem; font-weight: 700;
+      letter-spacing: 4px; text-transform: uppercase; color: var(--hd-yellow);
+      text-shadow: 0 0 10px var(--hd-yellow-glow); line-height: 1;
+    }
+    header p {
+      font-size: 0.75rem; color: var(--hd-text-muted);
+      letter-spacing: 3px; text-transform: uppercase; font-weight: 700;
+    }
+
+    /* MODAL DE SELEÇÃO */
+    #modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px);
+      align-items: flex-end; justify-content: center;
+    }
+    #modal-overlay.open { display: flex; }
+    #modal {
+      background: var(--hd-panel-bg); border: 2px solid var(--hd-yellow);
+      clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 0 100%);
+      width: 100%; padding: 16px; max-height: 80vh;
+      display: flex; flex-direction: column; gap: 12px;
+      box-shadow: 0 0 30px var(--hd-yellow-glow);
+    }
+    #modal-input {
+      width: 100%; padding: 12px 14px; background: #050709;
+      border: 1px solid var(--hd-yellow); color: var(--hd-yellow);
+      font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 700;
+      outline: none; text-transform: uppercase; letter-spacing: 2px;
+    }
+    #modal-results {
+      overflow-y: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    }
+    #modal-close {
+      background: var(--hd-yellow); border: none; color: #000; padding: 10px;
+      font-family: 'Teko', sans-serif; font-size: 1.2rem; font-weight: 700;
+      letter-spacing: 2px; cursor: pointer; text-transform: uppercase;
+    }
+
+    /* SLOTS DE LOADOUT */
+    #loadout {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
+      background: #06080b; border-top: 2px solid var(--hd-yellow);
+      padding: 10px 10px 12px; box-shadow: 0 -10px 25px rgba(0,0,0,0.9);
+    }
+    .loadout-label {
+      font-family: 'Teko', sans-serif; font-size: 1.1rem; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--hd-yellow); margin-bottom: 4px;
+      text-align: center; text-shadow: 0 0 8px var(--hd-yellow-glow);
+    }
+    .slots-row { display: flex; gap: 6px; justify-content: center; margin-bottom: 4px; }
+    .slot {
+      width: 64px; height: 64px; border: 2px solid #2a3342; background: #0c1017;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-size: 0.6rem; font-weight: 700; color: #445166; letter-spacing: 1px;
+      text-transform: uppercase; position: relative; cursor: pointer; transition: all 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+      clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%, 0 10%);
+    }
+    .slot.filled {
+      border-color: var(--hd-yellow); background: #161c27;
+      box-shadow: inset 0 0 10px rgba(255, 232, 0, 0.15);
+    }
+    .slot.filled img { width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 0 4px var(--hd-yellow)); pointer-events: none; }
+    .slot.filled span { font-size: 0.55rem; color: #fff; text-align: center; font-weight: 700; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; padding: 0 2px; pointer-events: none; }
+    .slot.drag-over { border-color: var(--hd-yellow); background: #252e3d; transform: scale(1.05); }
+    .slot .remove {
+      position: absolute; top: 2px; right: 4px; font-size: 0.75rem;
+      color: #ff4444; font-weight: 900; display: none;
+      pointer-events: auto; z-index: 10; padding: 3px; line-height: 1;
+    }
+    .slot.filled .remove { display: block; }
+    .slot.active-glow { border-color: #ffffff; box-shadow: 0 0 20px var(--hd-yellow); transform: scale(0.95); }
+
+    /* CARDS */
+    main { padding: 16px; }
+    .section { margin-bottom: 24px; }
+    .section-title {
+      font-family: 'Teko', sans-serif; font-size: 1.3rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2px; color: var(--hd-yellow);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::after {
+      content:''; flex:1; height:2px; background: linear-gradient(90deg, var(--hd-yellow), transparent);
+    }
+    .grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+
+    .card {
+      background: #111620; border: 1px solid #222c3d; color: #e2e8f0;
+      padding: 12px 6px; font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 700;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      transition: transform 0.15s, border-color 0.15s; position: relative; overflow: hidden;
+      -webkit-tap-highlight-color: transparent; cursor: grab; user-select: none;
+      clip-path: polygon(0 0, 88% 0, 100% 12%, 100% 100%, 0 100%);
+    }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+      background: transparent; transition: background 0.15s;
+    }
+    .card:hover::before { background: var(--hd-yellow); }
+    .card img { width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(0 0 4px rgba(255, 232, 0, 0.3)); pointer-events: none; }
+    .card span { line-height: 1.1; letter-spacing: 0.5px; text-align: center; pointer-events: none; text-transform: uppercase; }
+    .card.dragging { opacity: 0.3; }
+
+    /* TOAST */
+    #toast {
+      position: fixed; bottom: 140px; left: 50%;
+      transform: translateX(-50%) translateY(10px); background: var(--hd-yellow); color: #000;
+      padding: 10px 24px; clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%);
+      font-family: 'Teko', sans-serif; font-size: 1.3rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; opacity: 0;
+      transition: opacity 0.2s, transform 0.2s; pointer-events: none;
+      white-space: nowrap; box-shadow: 0 0 25px var(--hd-yellow-glow); z-index: 300;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* TELA DE ERRO DE CONEXÃO */
+    #offline-screen {
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: var(--hd-dark-bg); flex-direction: column;
+      align-items: center; justify-content: center; gap: 16px; text-align: center; padding: 32px;
+    }
+    #offline-screen.show { display: flex; }
+    #offline-screen .err-icon { font-size: 3rem; }
+    #offline-screen h2 {
+      font-family: 'Teko', sans-serif; font-size: 1.8rem; color: #ff4444;
+      letter-spacing: 3px; text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(255,68,68,0.5);
+    }
+    #offline-screen p { font-size: 0.9rem; color: var(--hd-text-muted); line-height: 1.6; max-width: 300px; }
+    #offline-screen code {
+      display: inline-block; background: #0d1117; border: 1px solid #ff444460;
+      color: #ff8888; padding: 2px 8px; font-size: 0.85rem; border-radius: 4px;
+    }
+    #offline-retry {
+      margin-top: 8px; background: none; border: 2px solid var(--hd-yellow);
+      color: var(--hd-yellow); padding: 10px 28px;
+      font-family: 'Teko', sans-serif; font-size: 1.2rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="offline-screen">
+  <div class="err-icon">⚠️</div>
+  <h2>Servidor Offline</h2>
+  <p>Não foi possível conectar ao servidor.<br>Certifique-se que o <code>HD2-Macro-Pad</code> está rodando no PC e que você está na mesma rede.</p>
+  <button id="offline-retry">Tentar Novamente</button>
+</div>
+
+<header>
+  <h1>HELLDIVERS 2</h1>
+  <p>★ Super Earth Tactical Command ★</p>
+</header>
+
+<div id="modal-overlay">
+  <div id="modal">
+    <input id="modal-input" type="search" placeholder="🔍  Buscar stratagem..." autocomplete="off" />
+    <div id="modal-results"></div>
+    <button id="modal-close">CANCELAR</button>
+  </div>
+</div>
+
+<div id="loadout">
+  <div class="loadout-label">Equipados — toque para usar</div>
+  <div class="slots-row" id="slots-top">
+    <div class="slot" data-slot="0"><span class="remove">✕</span><span>vazio</span></div>
+    <div class="slot" data-slot="1"><span class="remove">✕</span><span>vazio</span></div>
+    <div class="slot" data-slot="2"><span class="remove">✕</span><span>vazio</span></div>
+    <div class="slot" data-slot="3"><span class="remove">✕</span><span>vazio</span></div>
+    <div class="slot" data-slot="4"><span class="remove">✕</span><span>vazio</span></div>
+    <div class="slot" data-slot="5"><span class="remove">✕</span><span>vazio</span></div>
+    <div class="slot" data-slot="6"><span class="remove">✕</span><span>vazio</span></div>
+  </div>
+  <div class="slots-row" id="slots-bottom">
+    <div class="slot" data-slot="7"><span class="remove">✕</span><span>vazio</span></div>
+    <div class="slot" data-slot="8"><span class="remove">✕</span><span>vazio</span></div>
+    <div class="slot" data-slot="9"><span class="remove">✕</span><span>vazio</span></div>
+    <div class="slot" data-slot="10"><span class="remove">✕</span><span>vazio</span></div>
+  </div>
+</div>
+
+<main>
+  <div class="section">
+    <div class="section-title">🦅 Eagle</div>
+    <div class="grid">
+      <div class="card" data-id="eagle_strafing" data-name="Eagle Strafing Run"><img src="icons/Eagle_Strafing_Run_Stratagem_Icon_Background.svg"><span>Strafing Run</span></div>
+      <div class="card" data-id="eagle_airstrike" data-name="Eagle Airstrike"><img src="icons/Eagle_Airstrike_Stratagem_Icon_Background.svg"><span>Airstrike</span></div>
+      <div class="card" data-id="eagle_cluster" data-name="Eagle Cluster Bomb"><img src="icons/Eagle_Cluster_Bomb_Stratagem_Icon_Background.svg"><span>Cluster Bomb</span></div>
+      <div class="card" data-id="eagle_napalm" data-name="Eagle Napalm Airstrike"><img src="icons/Eagle_Napalm_Airstrike_Stratagem_Icon_Background.svg"><span>Napalm Airstrike</span></div>
+      <div class="card" data-id="eagle_110mm" data-name="Eagle 110MM Rocket Pods"><img src="icons/Eagle_110mm_Rocket_Pods_Stratagem_Icon_Background.svg"><span>110MM Rockets</span></div>
+      <div class="card" data-id="eagle_500kg" data-name="Eagle 500KG Bomb"><img src="icons/Eagle_500kg_Bomb_Stratagem_Icon_Background.svg"><span>500KG Bomb</span></div>
+      <div class="card" data-id="eagle_smoke" data-name="Eagle Smoke Strike"><img src="icons/Eagle_Smoke_Strike_Stratagem_Icon_Background.svg"><span>Smoke Strike</span></div>
+      <div class="card" data-id="eagle_rearm" data-name="Eagle Rearm"><img src="icons/Eagle_Rearm_Stratagem_Icon_Background.svg"><span>Eagle Rearm</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🛰️ Orbital</div>
+    <div class="grid">
+      <div class="card" data-id="orbital_gatling" data-name="Orbital Gatling Barrage"><img src="icons/Orbital_Gatling_Barrage_Stratagem_Icon_Background.svg"><span>Gatling Barrage</span></div>
+      <div class="card" data-id="orbital_airburst" data-name="Orbital Airburst Strike"><img src="icons/Orbital_Airburst_Strike_Stratagem_Icon_Background.svg"><span>Airburst Strike</span></div>
+      <div class="card" data-id="orbital_120mm" data-name="Orbital 120MM HE Barrage"><img src="icons/Orbital_120mm_HE_Barrage_Stratagem_Icon_Background.svg"><span>120MM Barrage</span></div>
+      <div class="card" data-id="orbital_380mm" data-name="Orbital 380MM HE Barrage"><img src="icons/Orbital_380mm_HE_Barrage_Stratagem_Icon_Background.svg"><span>380MM Barrage</span></div>
+      <div class="card" data-id="orbital_walking" data-name="Orbital Walking Barrage"><img src="icons/Orbital_Walking_Barrage_Stratagem_Icon_Background.svg"><span>Walking Barrage</span></div>
+      <div class="card" data-id="orbital_precision" data-name="Orbital Precision Strike"><img src="icons/Orbital_Precision_Strike_Stratagem_Icon_Background.svg"><span>Precision Strike</span></div>
+      <div class="card" data-id="orbital_gas" data-name="Orbital Gas Strike"><img src="icons/Orbital_Gas_Strike_Stratagem_Icon_Background.svg"><span>Gas Strike</span></div>
+      <div class="card" data-id="orbital_ems" data-name="Orbital EMS Strike"><img src="icons/Orbital_EMS_Strike_Stratagem_Icon_Background.svg"><span>EMS Strike</span></div>
+      <div class="card" data-id="orbital_smoke" data-name="Orbital Smoke Strike"><img src="icons/Orbital_Smoke_Strike_Stratagem_Icon_Background.svg"><span>Smoke Strike</span></div>
+      <div class="card" data-id="orbital_napalm" data-name="Orbital Napalm Barrage"><img src="icons/Orbital_Napalm_Barrage_Stratagem_Icon_Background.svg"><span>Napalm Barrage</span></div>
+      <div class="card" data-id="orbital_laser" data-name="Orbital Laser"><img src="icons/Orbital_Laser_Stratagem_Icon_Background.svg"><span>Orbital Laser</span></div>
+      <div class="card" data-id="orbital_railcannon" data-name="Orbital Railcannon Strike"><img src="icons/Orbital_Railcannon_Strike_Stratagem_Icon_Background.svg"><span>Railcannon Strike</span></div>
+      <div class="card" data-id="orbital_illumination" data-name="Orbital Illumination Flare"><img src="icons/Orbital_Illumination_Flare_Stratagem_Icon_Background.svg"><span>Illumination Flare</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🤖 Sentinelas</div>
+    <div class="grid">
+      <div class="card" data-id="machine_gun_sentry" data-name="Machine Gun Sentry"><img src="icons/Machine_Gun_Sentry_Stratagem_Icon_Background.svg"><span>MG Sentry</span></div>
+      <div class="card" data-id="gatling_sentry" data-name="Gatling Sentry"><img src="icons/Gatling_Sentry_Stratagem_Icon_Background.svg"><span>Gatling Sentry</span></div>
+      <div class="card" data-id="autocannon_sentry" data-name="Autocannon Sentry"><img src="icons/Autocannon_Sentry_Stratagem_Icon_Background.svg"><span>Autocannon Sentry</span></div>
+      <div class="card" data-id="mortar_sentry" data-name="Mortar Sentry"><img src="icons/Mortar_Sentry_Stratagem_Icon_Background.svg"><span>Mortar Sentry</span></div>
+      <div class="card" data-id="rocket_sentry" data-name="Rocket Sentry"><img src="icons/Rocket_Sentry_Stratagem_Icon_Background.svg"><span>Rocket Sentry</span></div>
+      <div class="card" data-id="tesla_tower" data-name="Tesla Tower"><img src="icons/Tesla_Tower_Stratagem_Icon_Background.svg"><span>Tesla Tower</span></div>
+      <div class="card" data-id="ems_mortar_sentry" data-name="EMS Mortar Sentry"><img src="icons/EMS_Mortar_Sentry_Stratagem_Icon_Background.svg"><span>EMS Mortar</span></div>
+      <div class="card" data-id="laser_sentry" data-name="Laser Sentry"><img src="icons/Laser_Sentry_Stratagem_Icon_Background.svg"><span>Laser Sentry</span></div>
+      <div class="card" data-id="flame_sentry" data-name="Flame Sentry"><img src="icons/Flame_Sentry_Stratagem_Icon_Background.svg"><span>Flame Sentry</span></div>
+      <div class="card" data-id="gas_mortar_sentry" data-name="Gas Mortar Sentry"><img src="icons/Gas_Mortar_Sentry_Stratagem_Icon_Background.svg"><span>Gas Mortar</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🛡️ Defesa &amp; Minas</div>
+    <div class="grid">
+      <div class="card" data-id="hmg_emplacement" data-name="HMG Emplacement"><img src="icons/HMG_Emplacement_Stratagem_Icon_Background.svg"><span>HMG Emplacement</span></div>
+      <div class="card" data-id="anti_tank_emplacement" data-name="Anti-Tank Emplacement"><img src="icons/Anti-Tank_Emplacement_Stratagem_Icon_Background.svg"><span>AT Emplacement</span></div>
+      <div class="card" data-id="grenadier_battlement" data-name="Grenadier Battlement"><img src="icons/Grenadier_Battlement_Stratagem_Icon_Background.svg"><span>Grenadier Battlement</span></div>
+      <div class="card" data-id="shield_relay" data-name="Shield Generator Relay"><img src="icons/Shield_Generator_Relay_Stratagem_Icon_Background.svg"><span>Shield Relay</span></div>
+      <div class="card" data-id="anti_personnel_mine" data-name="Anti-Personnel Minefield"><img src="icons/Anti-Personnel_Minefield_Stratagem_Icon_Background.svg"><span>AP Minefield</span></div>
+      <div class="card" data-id="incendiary_mines" data-name="Incendiary Mines"><img src="icons/Incendiary_Mines_Stratagem_Icon_Background.svg"><span>Incendiary Mines</span></div>
+      <div class="card" data-id="anti_tank_mines" data-name="Anti-Tank Mines"><img src="icons/Anti-Tank_Mines_Stratagem_Icon_Background.svg"><span>AT Mines</span></div>
+      <div class="card" data-id="gas_mines" data-name="Gas Mines"><img src="icons/Gas_Mines_Stratagem_Icon_Background.svg"><span>Gas Mines</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🔫 Armas Pesadas</div>
+    <div class="grid">
+      <div class="card" data-id="machine_gun" data-name="MG-43 Machine Gun"><img src="icons/Machine_Gun_Stratagem_Icon_Background.svg"><span>Machine Gun</span></div>
+      <div class="card" data-id="stalwart" data-name="M-105 Stalwart"><img src="icons/Stalwart_Stratagem_Icon_Background.svg"><span>Stalwart</span></div>
+      <div class="card" data-id="expendable_at" data-name="EAT-17 Expendable Anti-Tank"><img src="icons/Expendable_Anti-Tank_Stratagem_Icon_Background.svg"><span>EAT</span></div>
+      <div class="card" data-id="grenade_launcher" data-name="GL-21 Grenade Launcher"><img src="icons/Grenade_Launcher_Stratagem_Icon_Background.svg"><span>Grenade Launcher</span></div>
+      <div class="card" data-id="laser_cannon" data-name="LAS-98 Laser Cannon"><img src="icons/Laser_Cannon_Stratagem_Icon_Background.svg"><span>Laser Cannon</span></div>
+      <div class="card" data-id="anti_materiel_rifle" data-name="APW-1 Anti-Materiel Rifle"><img src="icons/Anti-Materiel_Rifle_Stratagem_Icon_Background.svg"><span>AM Rifle</span></div>
+      <div class="card" data-id="recoilless_rifle" data-name="GR-8 Recoilless Rifle"><img src="icons/Recoilless_Rifle_Stratagem_Icon_Background.svg"><span>Recoilless Rifle</span></div>
+      <div class="card" data-id="flamethrower" data-name="FLAM-40 Flamethrower"><img src="icons/Flamethrower_Stratagem_Icon_Background.svg"><span>Flamethrower</span></div>
+      <div class="card" data-id="hmg" data-name="MG-206 Heavy Machine Gun"><img src="icons/Heavy_Machine_Gun_Stratagem_Icon_Background.svg"><span>Heavy MG</span></div>
+      <div class="card" data-id="autocannon" data-name="AC-8 Autocannon"><img src="icons/Autocannon_Stratagem_Icon_Background.svg"><span>Autocannon</span></div>
+      <div class="card" data-id="arc_thrower" data-name="ARC-3 Arc Thrower"><img src="icons/Arc_Thrower_Stratagem_Icon_Background.svg"><span>Arc Thrower</span></div>
+      <div class="card" data-id="quasar" data-name="LAS-99 Quasar Cannon"><img src="icons/Quasar_Cannon_Stratagem_Icon_Background.svg"><span>Quasar Cannon</span></div>
+      <div class="card" data-id="airburst_launcher" data-name="RL-77 Airburst Rocket Launcher"><img src="icons/Airburst_Rocket_Launcher_Stratagem_Icon_Background.svg"><span>Airburst Launcher</span></div>
+      <div class="card" data-id="commando" data-name="MLS-4X Commando"><img src="icons/Commando_Stratagem_Icon_Background.svg"><span>Commando</span></div>
+      <div class="card" data-id="spear" data-name="FAF-14 Spear"><img src="icons/Spear_Stratagem_Icon_Background.svg"><span>Spear</span></div>
+      <div class="card" data-id="railgun" data-name="RS-422 Railgun"><img src="icons/Railgun_Stratagem_Icon_Background.svg"><span>Railgun</span></div>
+      <div class="card" data-id="wasp_launcher" data-name="W.A.S.P. Launcher"><img src="icons/W.A.S.P._Launcher_Stratagem_Icon_Background.svg"><span>W.A.S.P.</span></div>
+      <div class="card" data-id="speargun" data-name="S-11 Speargun"><img src="icons/Speargun_Stratagem_Icon_Background.svg"><span>Speargun</span></div>
+      <div class="card" data-id="defoliation_tool" data-name="CQC-9 Defoliation Tool"><img src="icons/Defoliation_Tool_Stratagem_Icon_Background.svg"><span>Defoliation Tool</span></div>
+      <div class="card" data-id="de_escalator" data-name="GL-52 De-Escalator"><img src="icons/De-Escalator_Stratagem_Icon_Background.svg"><span>De-Escalator</span></div>
+      <div class="card" data-id="expendable_napalm" data-name="EAT-700 Expendable Napalm"><img src="icons/Expendable_Napalm_Stratagem_Icon_Background.svg"><span>Exp. Napalm</span></div>
+      <div class="card" data-id="sterilizer" data-name="TX-41 Sterilizer"><img src="icons/Sterilizer_Stratagem_Icon_Background.svg"><span>Sterilizer</span></div>
+      <div class="card" data-id="leveller" data-name="EAT-411 Leveller"><img src="icons/Leveller_Stratagem_Icon_Background.svg"><span>Leveller</span></div>
+      <div class="card" data-id="belt_grenade_launcher" data-name="GL-28 Belt-Fed Grenade Launcher"><img src="icons/Belt-Fed_Grenade_Launcher_Stratagem_Icon_Background.svg"><span>Belt-Fed GL</span></div>
+      <div class="card" data-id="c4_pack" data-name="C4 Pack"><img src="icons/C4_Pack_Stratagem_Icon_Background.svg"><span>C4 Pack</span></div>
+      <div class="card" data-id="solo_silo" data-name="MS-11 Solo Silo"><img src="icons/Solo_Silo_Stratagem_Icon_Background.svg"><span>Solo Silo</span></div>
+      <div class="card" data-id="cremator" data-name="B/FLAM-80 Cremator"><img src="icons/Cremator_Stratagem_Icon_Background.svg"><span>Cremator</span></div>
+      <div class="card" data-id="maxigun" data-name="M-1000 Maxigun"><img src="icons/Maxigun_Stratagem_Icon_Background.svg"><span>Maxigun</span></div>
+      <div class="card" data-id="one_true_flag" data-name="CQC-1 One True Flag"><img src="icons/One_True_Flag_Stratagem_Icon_Background.svg"><span>One True Flag</span></div>
+      <div class="card" data-id="meltagun" data-name="40-K Meltagun"><img src="icons/Meltagun_Stratagem_Icon_Background.svg"><span>Meltagun</span></div>
+      <div class="card" data-id="breaching_hammer" data-name="CQC-20 Breaching Hammer"><img src="icons/Breaching_Hammer_Stratagem_Icon_Background.svg"><span>Breaching Hammer</span></div>
+      <div class="card" data-id="epoch" data-name="PLAS-45 Epoch"><img src="icons/Epoch_Stratagem_Icon_Background.svg"><span>Epoch</span></div>
+      <div class="card" data-id="bullet_storm" data-name="MGX-42 Bullet Storm"><img src="icons/Bullet_Storm_Stratagem_Icon_Background.svg"><span>Bullet Storm</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🎒 Backpacks</div>
+    <div class="grid">
+      <div class="card" data-id="supply_pack" data-name="B-1 Supply Pack"><img src="icons/Supply_Pack_Stratagem_Icon_Background.svg"><span>Supply Pack</span></div>
+      <div class="card" data-id="jump_pack" data-name="LIFT-850 Jump Pack"><img src="icons/Jump_Pack_Stratagem_Icon_Background.svg"><span>Jump Pack</span></div>
+      <div class="card" data-id="ballistic_shield" data-name="SH-20 Ballistic Shield"><img src="icons/Ballistic_Shield_Backpack_Stratagem_Icon_Background.svg"><span>Ballistic Shield</span></div>
+      <div class="card" data-id="guard_dog" data-name="AX/AR-23 Guard Dog"><img src="icons/Guard_Dog_Stratagem_Icon_Background.svg"><span>Guard Dog</span></div>
+      <div class="card" data-id="rover" data-name="AX/LAS-5 Rover"><img src="icons/Rover_Stratagem_Icon_Background.svg"><span>Rover</span></div>
+      <div class="card" data-id="shield_generator" data-name="SH-32 Shield Generator Pack"><img src="icons/Shield_Generator_Pack_Stratagem_Icon_Background.svg"><span>Shield Generator</span></div>
+      <div class="card" data-id="directional_shield" data-name="SH-51 Directional Shield"><img src="icons/Directional_Shield_Stratagem_Icon_Background.svg"><span>Directional Shield</span></div>
+      <div class="card" data-id="hot_dog" data-name="AX/FLAM-75 Hot Dog"><img src="icons/Hot_Dog_Stratagem_Icon_Background.svg"><span>Hot Dog</span></div>
+      <div class="card" data-id="k9" data-name="AX/ARC-3 K-9"><img src="icons/K-9_Stratagem_Icon_Background.svg"><span>K-9</span></div>
+      <div class="card" data-id="hover_pack" data-name="LIFT-860 Hover Pack"><img src="icons/Hover_Pack_Stratagem_Icon_Background.svg"><span>Hover Pack</span></div>
+      <div class="card" data-id="dog_breath" data-name="AX/TX-13 Dog Breath"><img src="icons/Dog_Breath_Stratagem_Icon_Background.svg"><span>Dog Breath</span></div>
+      <div class="card" data-id="warp_pack" data-name="LIFT-182 Warp Pack"><img src="icons/Warp_Pack_Stratagem_Icon_Background.svg"><span>Warp Pack</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🦾 Exosuits &amp; Veículos</div>
+    <div class="grid">
+      <div class="card" data-id="patriot_exosuit" data-name="EXO-45 Patriot Exosuit"><img src="icons/Patriot_Exosuit_Stratagem_Icon_Background.svg"><span>Patriot</span></div>
+      <div class="card" data-id="emancipator_exosuit" data-name="EXO-49 Emancipator"><img src="icons/Emancipator_Exosuit_Stratagem_Icon_Background.svg"><span>Emancipator</span></div>
+      <div class="card" data-id="lumberer_exosuit" data-name="EXO-51 Lumberer"><img src="icons/Lumberer_Exosuit_Stratagem_Icon_Background.svg"><span>Lumberer</span></div>
+      <div class="card" data-id="breakthrough_exosuit" data-name="EXO-55 Breakthrough"><img src="icons/Breakthrough_Exosuit_Stratagem_Icon_Background.svg"><span>Breakthrough</span></div>
+      <div class="card" data-id="bastion_exosuit" data-name="TD-220 Bastion MK XVI"><img src="icons/Bastion_MK_XVI_Stratagem_Icon_Background.svg"><span>Bastion MK XVI</span></div>
+      <div class="card" data-id="fast_recon_vehicle" data-name="M-102 Gunner FRV"><img src="icons/Fast_Recon_Vehicle_Stratagem_Icon_Background.svg"><span>Gunner FRV</span></div>
+      <div class="card" data-id="incinerator_frv" data-name="M-104 Incinerator FRV"><img src="icons/Incinerator_FRV_Stratagem_Icon_Background.svg"><span>Incinerator FRV</span></div>
+      <div class="card" data-id="supply_frv" data-name="M-103 Supply FRV"><img src="icons/Supply_FRV_Stratagem_Icon_Background.svg"><span>Supply FRV</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🆘 Essenciais</div>
+    <div class="grid">
+      <div class="card" data-id="reinforce" data-name="Reinforce"><img src="icons/Reinforce_Stratagem_Icon_Background.svg"><span>Reinforce</span></div>
+      <div class="card" data-id="resupply" data-name="Resupply"><img src="icons/Resupply_Stratagem_Icon_Background.svg"><span>Resupply</span></div>
+      <div class="card" data-id="sos_beacon" data-name="SOS Beacon"><img src="icons/SOS_Beacon_Stratagem_Icon_Background.svg"><span>SOS Beacon</span></div>
+      <div class="card" data-id="hellbomb" data-name="NUX-223 Hellbomb"><img src="icons/Hellbomb_Stratagem_Icon_Background.svg"><span>Hellbomb</span></div>
+      <div class="card" data-id="super_earth_flag" data-name="Super Earth Flag"><img src="icons/Super_Earth_Flag_Stratagem_Icon_Background.svg"><span>SE Flag</span></div>
+      <div class="card" data-id="seaf_artillery" data-name="SEAF Artillery"><img src="icons/SEAF_Artillery_Stratagem_Icon_Background.svg"><span>SEAF Artillery</span></div>
+      <div class="card" data-id="call_super_destroyer" data-name="Call In Super Destroyer"><img src="icons/Call_In_Super_Destroyer_Stratagem_Icon_Background.svg"><span>Super Destroyer</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🎯 Missão</div>
+    <div class="grid">
+      <div class="card" data-id="seismic_probe" data-name="Seismic Probe"><img src="icons/Seismic_Probe_Stratagem_Icon_Background.svg"><span>Seismic Probe</span></div>
+      <div class="card" data-id="upload_data" data-name="SSSD Delivery"><img src="icons/Upload_Data_Stratagem_Icon_Background.svg"><span>SSSD Delivery</span></div>
+      <div class="card" data-id="dark_fluid_vessel" data-name="Dark Fluid Vessel"><img src="icons/Dark_Fluid_Vessel_Stratagem_Icon_Background.svg"><span>Dark Fluid Vessel</span></div>
+      <div class="card" data-id="drill" data-name="Prospecting Drill"><img src="icons/Drill_Stratagem_Icon_Background.svg"><span>Drill</span></div>
+      <div class="card" data-id="cargo_container" data-name="Cargo Container"><img src="icons/Cargo_Container_Stratagem_Icon_Background.svg"><span>Cargo Container</span></div>
+      <div class="card" data-id="portable_hellbomb" data-name="B-100 Portable Hellbomb"><img src="icons/Portable_Hellbomb_Stratagem_Icon_Background.svg"><span>Portable Hellbomb</span></div>
+    </div>
+  </div>
+</main>
+
+<div id="toast"></div>
+
+<footer style="text-align:center;padding:14px 0 6px;font-size:0.62rem;color:#666;letter-spacing:1px;">
+  💖 Feito com amor por <strong style="color:var(--hd-yellow);">Vanderson Azevedo</strong> pela Super Terra!
+</footer>
+
+<script>
+  const SLOTS = 11;
+  const loadout = Array(SLOTS).fill(null);
+  let dragData = null;
+  let activeCard = null;
+  let ghostEl = null;
+
+  function saveLoadout() {
+    localStorage.setItem('hd2_loadout', JSON.stringify(loadout));
+  }
+
+  function loadSaved() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('hd2_loadout'));
+      if (saved) saved.forEach((s, i) => { if (s) loadout[i] = s; });
+    } catch {}
+    renderSlots();
+  }
+
+  function renderSlots() {
+    document.querySelectorAll('.slot').forEach(slot => {
+      const i = +slot.dataset.slot;
+      const data = loadout[i];
+      slot.innerHTML = '<span class="remove">✕</span>';
+      const removeBtn = slot.querySelector('.remove');
+      removeBtn.addEventListener('touchend', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        loadout[i] = null;
+        renderSlots();
+        saveLoadout();
+      });
+      if (data) {
+        slot.classList.add('filled');
+        const img = document.createElement('img');
+        img.src = data.img;
+        const lbl = document.createElement('span');
+        lbl.textContent = data.name;
+        slot.appendChild(img);
+        slot.appendChild(lbl);
+      } else {
+        slot.classList.remove('filled');
+        const lbl = document.createElement('span');
+        lbl.textContent = 'vazio';
+        slot.appendChild(lbl);
+      }
+    });
+  }
+
+  document.querySelectorAll('.slot').forEach(slot => {
+    slot.addEventListener('click', e => {
+      const i = +slot.dataset.slot;
+      if (e.target.closest('.remove')) {
+        loadout[i] = null;
+        renderSlots();
+        saveLoadout();
+        return;
+      }
+      if (!loadout[i]) { openModal(i); return; }
+      triggerStratagem(loadout[i].id, loadout[i].name, slot);
+    });
+  });
+
+  async function triggerStratagem(id, name, slotEl) {
+    if (slotEl) { slotEl.classList.add('active-glow'); setTimeout(() => slotEl.classList.remove('active-glow'), 400); }
+    showToast(name);
+    try {
+      await fetch('/stratagem/' + id, { method: 'POST' });
+    } catch {}
+  }
+
+  /* --- SISTEMA DE DRAG & DROP REVISADO --- */
+  function createGhost(card) {
+    ghostEl = card.cloneNode(true);
+    ghostEl.style.cssText = 'position:fixed;opacity:0.9;pointer-events:none;z-index:999;width:75px;background:#161c27;border:2px solid #ffe800;padding:6px;display:flex;flex-direction:column;align-items:center;clip-path:polygon(0 0, 88% 0, 100% 12%, 100% 100%, 0 100%);box-shadow:0 0 15px rgba(255,232,0,0.5);';
+    ghostEl.querySelector('img').style.cssText = 'width:36px;height:36px;';
+    ghostEl.querySelector('span').style.cssText = 'font-size:0.55rem;color:#fff;text-align:center;font-weight:700;margin-top:2px;';
+    document.body.appendChild(ghostEl);
+  }
+
+  function moveGhost(x, y) {
+    if (!ghostEl) return;
+    ghostEl.style.left = (x - 37) + 'px';
+    ghostEl.style.top = (y - 37) + 'px';
+  }
+
+  function removeGhost() {
+    if (ghostEl) { ghostEl.remove(); ghostEl = null; }
+  }
+
+  function slotAtPoint(x, y) {
+    const els = document.elementsFromPoint(x, y);
+    return els.find(e => e.classList.contains('slot')) || null;
+  }
+
+  function startDrag(card, x, y) {
+    activeCard = card;
+    dragData = { id: card.dataset.id, name: card.dataset.name, img: card.querySelector('img').src };
+    card.classList.add('dragging');
+    createGhost(card);
+    moveGhost(x, y);
+  }
+
+  function moveDrag(x, y) {
+    if (!dragData) return;
+    moveGhost(x, y);
+    document.querySelectorAll('.slot').forEach(s => s.classList.remove('drag-over'));
+    const target = slotAtPoint(x, y);
+    if (target) target.classList.add('drag-over');
+  }
+
+  function endDrag(x, y) {
+    if (!dragData) return;
+    const target = slotAtPoint(x, y);
+    if (target) {
+      loadout[+target.dataset.slot] = dragData;
+      renderSlots();
+      saveLoadout();
+    }
+    document.querySelectorAll('.slot').forEach(s => s.classList.remove('drag-over'));
+    if (activeCard) activeCard.classList.remove('dragging');
+    removeGhost();
+    dragData = null;
+    activeCard = null;
+  }
+
+  function initCardEvents(card) {
+    let longPressTimer = null;
+    let touchMoved = false;
+
+    card.addEventListener('mousedown', e => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      startDrag(card, e.clientX, e.clientY);
+    });
+
+    card.addEventListener('touchstart', e => {
+      touchMoved = false;
+      const touch = e.touches[0];
+      longPressTimer = setTimeout(() => {
+        if (!touchMoved) {
+          startDrag(card, touch.clientX, touch.clientY);
+          navigator.vibrate && navigator.vibrate(40);
+        }
+      }, 350);
+    }, { passive: true });
+
+    card.addEventListener('touchmove', e => {
+      if (!dragData) {
+        touchMoved = true;
+        clearTimeout(longPressTimer);
+        return;
+      }
+      e.preventDefault();
+      const touch = e.touches[0];
+      moveDrag(touch.clientX, touch.clientY);
+    }, { passive: false });
+
+    card.addEventListener('touchend', e => {
+      clearTimeout(longPressTimer);
+      if (!dragData) return;
+      const touch = e.changedTouches[0];
+      endDrag(touch.clientX, touch.clientY);
+    });
+
+    card.addEventListener('touchcancel', () => {
+      clearTimeout(longPressTimer);
+      if (dragData) endDrag(-1, -1);
+    });
+  }
+
+  document.querySelectorAll('main .card').forEach(initCardEvents);
+
+  document.addEventListener('mousemove', e => {
+    if (!dragData) return;
+    moveDrag(e.clientX, e.clientY);
+  });
+
+  document.addEventListener('mouseup', e => {
+    if (!dragData) return;
+    endDrag(e.clientX, e.clientY);
+  });
+
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 1500);
+  }
+
+  loadSaved();
+
+  // Verifica conexão com o servidor
+  async function checkServer() {
+    try {
+      const res = await fetch('/ping', { method: 'GET', cache: 'no-store' });
+      if (!res.ok) throw new Error();
+      document.getElementById('offline-screen').classList.remove('show');
+    } catch {
+      document.getElementById('offline-screen').classList.add('show');
+    }
+  }
+  document.getElementById('offline-retry').addEventListener('click', checkServer);
+  checkServer();
+
+  // Modal de busca
+  let targetSlot = null;
+  const overlay = document.getElementById('modal-overlay');
+  const modalInput = document.getElementById('modal-input');
+  const modalResults = document.getElementById('modal-results');
+
+  document.querySelectorAll('main .card').forEach(card => {
+    const clone = card.cloneNode(true);
+    clone.addEventListener('click', () => {
+      if (targetSlot === null) return;
+      loadout[targetSlot] = { id: card.dataset.id, name: card.dataset.name, img: card.querySelector('img').src };
+      renderSlots();
+      saveLoadout();
+      closeModal();
+    });
+    modalResults.appendChild(clone);
+  });
+
+  function openModal(i) {
+    targetSlot = i;
+    modalInput.value = '';
+    modalResults.querySelectorAll('.card').forEach(c => c.style.display = '');
+    overlay.classList.add('open');
+    setTimeout(() => modalInput.focus(), 100);
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    targetSlot = null;
+  }
+
+  modalInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    modalResults.querySelectorAll('.card').forEach(c => {
+      c.style.display = (!q || c.dataset.name.toLowerCase().includes(q)) ? '' : 'none';
+    });
+  });
+
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+</script>
+</body>
+</html>
