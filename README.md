@@ -7,6 +7,8 @@ A ferramenta foi criada pensando principalmente em **acessibilidade**, para pess
 
 > A ideia não é facilitar o jogo, mas facilitar o acesso ao jogo.
 
+![ ](https://i.ibb.co/RGDPDrts/Sem-T-tulo-1.png)
+
 ## ✨ Recursos
 
 - Controle de Stratagems pelo celular ou tablet
@@ -38,8 +40,6 @@ http://192.168.1.105:5000
 
 > [!IMPORTANT]
 > O dispositivo (Celular ou Tablet) e o SERVIDOR (PC) precisam estar conectados à mesma rede local.
-
-![ ](https://i.ibb.co/RGDPDrts/Sem-T-tulo-1.png)
 
 ## 📖 Documentação
 
