@@ -209,6 +209,8 @@ if __name__ == "__main__":
     YELLOW = "#ffe800"
     DIM    = "#3a3a2a"
     GREEN  = "#39ff14"
+    ORANGE  = "#FFA500"
+    WHITE  = "#FFFFFF"
     FONT   = "Courier"
 
     local_ip = get_local_ip()
@@ -226,8 +228,8 @@ if __name__ == "__main__":
 
     # Logo
     try:
-        pil_img  = Image.open(resource_path(os.path.join("hd2_macropad_glow.png")))
-        pil_img = pil_img.resize(
+        pil_img  = Image.open(resource_path("hd2_macropad_glow.png"))
+        pil_img  = pil_img.resize(
             (int(pil_img.width * 0.15), int(pil_img.height * 0.15)),
             Image.LANCZOS
         )
@@ -235,8 +237,9 @@ if __name__ == "__main__":
         lbl_logo = tk.Label(root, image=logo_img, bg=BG)
         lbl_logo.image = logo_img
         lbl_logo.pack(pady=(28, 6))
-    except Exception:
+    except Exception as e:
         tk.Label(root, text="⚙", font=(FONT, 48), bg=BG, fg=YELLOW).pack(pady=(28, 6))
+        print("Logo error:", e)
 
     # tk.Label(root, text="HD2 MACRO-PAD",
     #          font=(FONT, 15, "bold"), bg=BG, fg=YELLOW).pack()
@@ -246,7 +249,7 @@ if __name__ == "__main__":
     # Status
     status_var = tk.StringVar(value="🟠 | Aguardando conexão do dispositivo...")
     status_lbl = tk.Label(root, textvariable=status_var,
-                          font=(FONT, 10, "bold"), bg=BG, fg=DIM)
+                          font=(FONT, 10, "bold"), bg=BG, fg=ORANGE)
     status_lbl.pack()
 
     tk.Frame(root, bg="#2a2a1a", height=1).pack(fill="x", padx=24, pady=12)
@@ -277,17 +280,25 @@ if __name__ == "__main__":
 
     def on_status(ips):
         def _do():
-            if not ips:
-                status_var.set("⬤  Aguardando dispositivo...")
-                status_lbl.configure(fg=DIM)
+            active = {ip: ts for ip, ts in ips.items()
+                      if (datetime.now() - ts).total_seconds() < 12}
+            if not active:
+                status_var.set("🟠 | Aguardando conexão do dispositivo...")
+                status_lbl.configure(fg=ORANGE)
             else:
-                latest = max(ips, key=ips.get)
-                status_var.set(f"⬤  Dispositivo conectado: {latest}")
+                latest = max(active, key=active.get)
+                status_var.set(f"🟢 | Dispositivo conectado: {latest}")
                 status_lbl.configure(fg=GREEN)
         root.after(0, _do)
 
+    def check_timeout():
+        on_status(_connected_ips)
+        root.after(5000, check_timeout)
+
     _gui_log_cb    = on_log
     _gui_status_cb = on_status
+
+    root.after(5000, check_timeout)
 
     threading.Thread(
         target=lambda: serve(app, host="0.0.0.0", port=5000),
