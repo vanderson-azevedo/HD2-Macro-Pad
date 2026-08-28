@@ -3,4 +3,14 @@
 # BatchFiles
 *.bat
 
+# IconFiles
+*.ico
+
+# ImageFiles
+*.png
+
+# Folders
+build
+dist
+
 # End

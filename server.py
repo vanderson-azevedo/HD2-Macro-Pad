@@ -4,19 +4,50 @@ import pyautogui
 import time
 import threading
 import logging
+import sys
+import os
+import socket
 from datetime import datetime
+
+def resource_path(relative):
+    base = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base, relative)
 
 app = Flask(__name__)
 pyautogui.PAUSE = 0
 pyautogui.FAILSAFE = False
 
-logging.basicConfig(level=logging.INFO, format='%(message)s')
-log = logging.getLogger('hd2')
+logging.disable(logging.CRITICAL)
+
+def get_local_ip():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        return "127.0.0.1"
+
+# Callbacks injetados pela GUI
+_gui_log_cb    = None
+_gui_status_cb = None
+_connected_ips = {}
+
+def _notify_log(msg):
+    if _gui_log_cb:
+        _gui_log_cb(msg)
+
+def _notify_status():
+    if _gui_status_cb:
+        _gui_status_cb(_connected_ips)
 
 @app.after_request
-def log_request(response):
-    now = datetime.now().strftime('%H:%M:%S')
-    log.info(f'➡️ Comando Recebido | {request.remote_addr} | [{now}] "{request.method} {request.path}"')
+def track_request(response):
+    ip = request.remote_addr
+    if ip != "127.0.0.1":
+        _connected_ips[ip] = datetime.now()
+        _notify_status()
     return response
 
 STRATAGEMS = {
@@ -154,31 +185,113 @@ def ping():
 
 @app.route("/")
 def index():
-    return send_from_directory("web", "index.html")
+    return send_from_directory(resource_path("web"), "index.html")
 
 @app.route("/icons/<path:filename>")
 def icons(filename):
-    return send_from_directory("web/icons", filename)
+    return send_from_directory(resource_path("web/icons"), filename)
 
 @app.route("/stratagem/<name>", methods=["POST"])
 def stratagem(name):
     if name not in STRATAGEMS:
-        print(f"[ERRO] Stratagem nao encontrado: {name}")
         return jsonify({"error": "Stratagem nao encontrado"}), 404
-    # print(f"[DISPARO] {name}")
+    now   = datetime.now().strftime("%H:%M:%S")
+    label = name.replace("_", " ").title()
+    _notify_log(f"🕗 [{now}] | 🌐 {request.remote_addr} | 📲 {label}")
     threading.Thread(target=execute_stratagem, args=(STRATAGEMS[name],), daemon=True).start()
     return jsonify({"ok": True, "stratagem": name})
 
 if __name__ == "__main__":
-    print("==================================================================")
-    print("🚀 ┊ HD2-Macro-Pad ATIVO E RODANDO!")
-    print("==================================================================")
-    print("🌐 ┊ Acesse pelo seu dispositivo : http://<SEU_IP_LOCAL>:5000")
-    print("📌 ┊ Requisito: O dispositivo deve estar na MESMA REDE WI-FI DO PC.")
-    print("------------------------------------------------------------------")
-    print("⚠️ » ATENÇÃO: MANTENHA ESTA JANELA ABERTA ENQUANTO ESTIVER USANDO!")
-    print("🛑 » Para encerrar o servidor com segurança, pressione: Ctrl + C")
-    print("==================================================================\n")
+    import tkinter as tk
+    from PIL import Image, ImageTk
 
-    # O serve deve ser a ÚLTIMA linha, pois ele bloqueia a execução do script
-    serve(app, host="0.0.0.0", port=5000)
+    BG     = "#090b0e"
+    YELLOW = "#ffe800"
+    DIM    = "#3a3a2a"
+    GREEN  = "#39ff14"
+    FONT   = "Courier"
+
+    local_ip = get_local_ip()
+
+    root = tk.Tk()
+    root.title("HD2 Macro-Pad")
+    root.configure(bg=BG)
+    root.resizable(False, False)
+    root.geometry("460x580")
+
+    try:
+        root.iconbitmap(resource_path("icon.ico"))
+    except Exception:
+        pass
+
+    # Logo
+    try:
+        pil_img  = Image.open(resource_path(os.path.join("hd2_macropad_glow.png")))
+        pil_img = pil_img.resize(
+            (int(pil_img.width * 0.15), int(pil_img.height * 0.15)),
+            Image.LANCZOS
+        )
+        logo_img = ImageTk.PhotoImage(pil_img)
+        lbl_logo = tk.Label(root, image=logo_img, bg=BG)
+        lbl_logo.image = logo_img
+        lbl_logo.pack(pady=(28, 6))
+    except Exception:
+        tk.Label(root, text="⚙", font=(FONT, 48), bg=BG, fg=YELLOW).pack(pady=(28, 6))
+
+    # tk.Label(root, text="HD2 MACRO-PAD",
+    #          font=(FONT, 15, "bold"), bg=BG, fg=YELLOW).pack()
+    tk.Label(root, text=f"ENDEREÇO DE CONEXÃO: {local_ip}:5000",
+             font=(FONT, 9), bg=BG, fg=DIM).pack(pady=(2, 14))
+
+    # Status
+    status_var = tk.StringVar(value="🟠 | Aguardando conexão do dispositivo...")
+    status_lbl = tk.Label(root, textvariable=status_var,
+                          font=(FONT, 10, "bold"), bg=BG, fg=DIM)
+    status_lbl.pack()
+
+    tk.Frame(root, bg="#2a2a1a", height=1).pack(fill="x", padx=24, pady=12)
+
+    # Log
+    tk.Label(root, text="📜 | LOG DE DISPAROS",
+             font=(FONT, 8), bg=BG, fg=DIM).pack(anchor="w", padx=24)
+
+    log_frame = tk.Frame(root, bg="#0d1117")
+    log_frame.pack(fill="both", expand=True, padx=24, pady=(4, 24))
+
+    log_text = tk.Text(log_frame, bg="#0d1117", fg="#b8b890",
+                       font=(FONT, 9), state="disabled",
+                       relief="flat", bd=0, wrap="word")
+    sb = tk.Scrollbar(log_frame, command=log_text.yview, bg=BG, troughcolor=BG)
+    log_text.configure(yscrollcommand=sb.set)
+    sb.pack(side="right", fill="y")
+    log_text.pack(fill="both", expand=True, padx=6, pady=6)
+
+    # Callbacks
+    def on_log(msg):
+        def _do():
+            log_text.configure(state="normal")
+            log_text.insert("end", msg + "\n")
+            log_text.see("end")
+            log_text.configure(state="disabled")
+        root.after(0, _do)
+
+    def on_status(ips):
+        def _do():
+            if not ips:
+                status_var.set("⬤  Aguardando dispositivo...")
+                status_lbl.configure(fg=DIM)
+            else:
+                latest = max(ips, key=ips.get)
+                status_var.set(f"⬤  Dispositivo conectado: {latest}")
+                status_lbl.configure(fg=GREEN)
+        root.after(0, _do)
+
+    _gui_log_cb    = on_log
+    _gui_status_cb = on_status
+
+    threading.Thread(
+        target=lambda: serve(app, host="0.0.0.0", port=5000),
+        daemon=True
+    ).start()
+
+    root.mainloop()
