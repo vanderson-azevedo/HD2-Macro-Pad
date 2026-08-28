@@ -7,6 +7,8 @@ A ferramenta foi criada pensando principalmente em **acessibilidade**, para pess
 
 > A ideia não é facilitar o jogo, mas facilitar o acesso ao jogo.
 
+![ ](https://i.ibb.co/RGDPDrts/Sem-T-tulo-1.png)
+
 ## ✨ Recursos
 
 - Controle de Stratagems pelo celular ou tablet
