@@ -49,7 +49,7 @@ Não é necessário banco de dados para armazenar o loadout.
 ## Estrutura
 
 ```text
-HD2 - keybinds/
+HD2-Macro-Pad/
 ├── server.py
 ├── requirements.txt
 ├── README.md
