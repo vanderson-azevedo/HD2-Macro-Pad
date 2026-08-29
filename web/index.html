@@ -436,7 +436,7 @@
       } else {
         slot.classList.remove('filled');
         const lbl = document.createElement('span');
-        lbl.textContent = 'vazio';
+        lbl.textContent = window._slotEmpty || 'empty';
         slot.appendChild(lbl);
       }
     });
@@ -586,6 +586,39 @@
   }
 
   loadSaved();
+
+  // Carrega idioma e aplica strings
+  async function applyLang() {
+    try {
+      const res = await fetch('/lang', { cache: 'no-store' });
+      const t = await res.json();
+
+      document.querySelector('header p').textContent = t.tagline;
+      document.querySelector('.loadout-label').textContent = t.loadout_label;
+      document.getElementById('modal-input').placeholder = t.search_placeholder;
+      document.getElementById('modal-close').textContent = t.modal_cancel;
+      document.getElementById('offline-screen').querySelector('h2').textContent = t.offline_title;
+      document.getElementById('offline-screen').querySelector('p').innerHTML =
+        t.offline_body.replace('\n', '<br>');
+      document.getElementById('offline-retry').textContent = t.offline_retry;
+      document.querySelector('footer').innerHTML = t.footer;
+
+      const sectionKeys = [
+        'section_eagle', 'section_orbital', 'section_sentries', 'section_defense',
+        'section_weapons', 'section_backpacks', 'section_exo', 'section_essentials', 'section_mission'
+      ];
+      document.querySelectorAll('.section-title').forEach((el, i) => {
+        if (sectionKeys[i]) el.childNodes[0].textContent = t[sectionKeys[i]];
+      });
+
+      // Atualiza slots vazios
+      document.querySelectorAll('.slot:not(.filled) span:last-child').forEach(el => {
+        el.textContent = t.slot_empty;
+      });
+      window._slotEmpty = t.slot_empty;
+    } catch {}
+  }
+  applyLang();
 
   // Verifica conexão com o servidor
   async function checkServer() {

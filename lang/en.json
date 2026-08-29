@@ -1,0 +1,31 @@
+{
+  "gui": {
+    "title":          "HD2 Macro-Pad",
+    "address":        "CONNECTION ADDRESS: {ip}:5000",
+    "waiting":        "🟠 | Waiting for device connection...",
+    "connected":      "🟢 | Device connected: {ip}",
+    "log_title":      "📜 | FIRE LOG",
+    "tray_open":      "Open",
+    "tray_quit":      "Quit"
+  },
+  "web": {
+    "tagline":        "★ Super Earth Tactical Command ★",
+    "loadout_label":  "Equipped — tap to use",
+    "slot_empty":     "empty",
+    "search_placeholder": "🔍  Search stratagem...",
+    "modal_cancel":   "CANCEL",
+    "offline_title":  "Server Offline",
+    "offline_body":   "Could not connect to the server.\nMake sure HD2-Macro-Pad is running on your PC and you are on the same network.",
+    "offline_retry":  "Try Again",
+    "section_eagle":      "🦅 Eagle",
+    "section_orbital":    "🛰️ Orbital",
+    "section_sentries":   "🤖 Sentries",
+    "section_defense":    "🛡️ Defense & Mines",
+    "section_weapons":    "🔫 Heavy Weapons",
+    "section_backpacks":  "🎒 Backpacks",
+    "section_exo":        "🦾 Exosuits & Vehicles",
+    "section_essentials": "🆘 Essentials",
+    "section_mission":    "🎯 Mission",
+    "footer": "💖 Made with love by <strong style=\"color:var(--hd-yellow);\">Vanderson Azevedo</strong> for Super Earth!"
+  }
+}

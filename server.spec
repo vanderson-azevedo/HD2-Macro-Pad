@@ -5,7 +5,7 @@ a = Analysis(
     ['server.py'],
     pathex=[],
     binaries=[],
-    datas=[('web', 'web'), ('hd2_macropad_glow.png', '.'), ('icon.ico', '.')],
+    datas=[('web', 'web'), ('hd2_macropad_glow.png', '.'), ('lang', 'lang'), ('icon.ico', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

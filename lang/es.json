@@ -1,0 +1,31 @@
+{
+  "gui": {
+    "title":          "HD2 Macro-Pad",
+    "address":        "DIRECCIÓN DE CONEXIÓN: {ip}:5000",
+    "waiting":        "🟠 | Esperando conexión del dispositivo...",
+    "connected":      "🟢 | Dispositivo conectado: {ip}",
+    "log_title":      "📜 | REGISTRO DE DISPAROS",
+    "tray_open":      "Abrir",
+    "tray_quit":      "Salir"
+  },
+  "web": {
+    "tagline":        "★ Super Earth Tactical Command ★",
+    "loadout_label":  "Equipados — toca para usar",
+    "slot_empty":     "vacío",
+    "search_placeholder": "🔍  Buscar estratagema...",
+    "modal_cancel":   "CANCELAR",
+    "offline_title":  "Servidor Desconectado",
+    "offline_body":   "No se pudo conectar al servidor.\nAsegúrate de que HD2-Macro-Pad esté ejecutándose en tu PC y que estés en la misma red.",
+    "offline_retry":  "Reintentar",
+    "section_eagle":      "🦅 Eagle",
+    "section_orbital":    "🛰️ Orbital",
+    "section_sentries":   "🤖 Centinelas",
+    "section_defense":    "🛡️ Defensa & Minas",
+    "section_weapons":    "🔫 Armas Pesadas",
+    "section_backpacks":  "🎒 Mochilas",
+    "section_exo":        "🦾 Exotrajes & Vehículos",
+    "section_essentials": "🆘 Esenciales",
+    "section_mission":    "🎯 Misión",
+    "footer": "💖 Hecho con amor por <strong style=\"color:var(--hd-yellow);\">Vanderson Azevedo</strong> por la Super Tierra!"
+  }
+}
