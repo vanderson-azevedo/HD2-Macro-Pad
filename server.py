@@ -214,6 +214,10 @@ def ping():
 def index():
     return send_from_directory(resource_path("web"), "index.html")
 
+@app.route("/<path:filename>")
+def static_files(filename):
+    return send_from_directory(resource_path("web"), filename)
+
 @app.route("/icons/<path:filename>")
 def icons(filename):
     return send_from_directory(resource_path("web/icons"), filename)
