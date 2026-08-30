@@ -18,6 +18,7 @@ A ferramenta foi criada pensando principalmente em **acessibilidade**, para pess
 - Execução das sequências de teclas pelo PC
 - Persistência do loadout no navegador
 - Interface web acessível pela rede local
+- Disponível em 3 Idiomas (Portugues, Ingles e Espanhol)
 
 ## ⚙️ Como funciona
 
@@ -31,7 +32,7 @@ O servidor Flask roda no PC e disponibiliza uma interface web na rede local. O d
 
 3) Depois, abra no dispositivo (Celular ou Tablet) o endereço informado pelo servidor, por exemplo:
 
-![ ](https://i.ibb.co/fV6Yxrks/F3-D07-C65-3292-48-AD-BCA6-47-DDE3-BFD67-B.png)
+![ ](https://i.ibb.co/nMNfQvb8/12-ABA73-B-BF62-415-F-BD87-CF3-C71-A65-FC2.png)
 
 > [!IMPORTANT]
 > O dispositivo (Celular ou Tablet) e o SERVIDOR (PC) precisam estar conectados à mesma rede local.
