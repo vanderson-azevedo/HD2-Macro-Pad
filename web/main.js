@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function saveLoadout() {
     localStorage.setItem('hd2_loadout', JSON.stringify(loadout));
+    fetch('/loadout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(loadout) }).catch(() => {});
   }
 
   function loadSaved() {
@@ -15,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (saved) saved.forEach((s, i) => { if (s) loadout[i] = s; });
     } catch {}
     renderSlots();
+    fetch('/loadout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(loadout) }).catch(() => {});
   }
 
   function renderSlots() {

@@ -56,6 +56,7 @@ def get_local_ip():
 _gui_log_cb    = None
 _gui_status_cb = None
 _connected_ips = {}
+_server_loadout = [None] * 11
 
 def _notify_log(msg):
     if _gui_log_cb:
@@ -222,6 +223,14 @@ def static_files(filename):
 def icons(filename):
     return send_from_directory(resource_path("web/icons"), filename)
 
+@app.route("/loadout", methods=["GET", "POST"])
+def loadout_route():
+    global _server_loadout
+    if request.method == "POST":
+        _server_loadout = request.get_json(force=True)
+        return jsonify({"ok": True})
+    return jsonify(_server_loadout)
+
 @app.route("/stratagem/<name>", methods=["POST"])
 def stratagem(name):
     if name not in STRATAGEMS:
@@ -231,6 +240,64 @@ def stratagem(name):
     _notify_log(f"🕗 [{now}] | 🌐 {request.remote_addr} | 📲 {label}")
     threading.Thread(target=execute_stratagem, args=(STRATAGEMS[name],), daemon=True).start()
     return jsonify({"ok": True, "stratagem": name})
+
+def _start_hotkey_listener():
+    from pynput import keyboard
+
+    HOTKEYS = {
+        keyboard.Key.f1: 0,
+        keyboard.Key.f2: 1,
+        keyboard.Key.f3: 2,
+        keyboard.Key.f4: 3,
+
+        keyboard.Key.f5: 7,
+        keyboard.Key.f6: 8,
+        keyboard.Key.f7: 9,
+        keyboard.Key.f8: 10,
+
+        keyboard.Key.f9: 4,
+        keyboard.Key.f10: 5,
+        keyboard.Key.f11: 6,
+    }
+
+    def on_press(key):
+        slot = HOTKEYS.get(key)
+
+        if slot is None:
+            return
+
+        try:
+            entry = _server_loadout[slot]
+        except (IndexError, TypeError):
+            return
+
+        if not entry or not isinstance(entry, dict):
+            return
+
+        name = entry.get("id")
+
+        if name not in STRATAGEMS:
+            return
+
+        now = datetime.now().strftime("%H:%M:%S")
+        label = name.replace("_", " ").title()
+
+        # Mostra a tecla REAL que foi pressionada
+        key_name = str(key).replace("Key.", "").upper()
+
+        _notify_log(
+            f"🕗 [{now}] | ⌨️  {key_name} | 📲 {label}"
+        )
+
+        threading.Thread(
+            target=execute_stratagem,
+            args=(STRATAGEMS[name],),
+            daemon=True
+        ).start()
+
+    listener = keyboard.Listener(on_press=on_press)
+    listener.daemon = True
+    listener.start()
 
 if __name__ == "__main__":
     import tkinter as tk
@@ -400,5 +467,7 @@ if __name__ == "__main__":
         target=lambda: serve(app, host="0.0.0.0", port=5000),
         daemon=True
     ).start()
+
+    _start_hotkey_listener()
 
     root.mainloop()
