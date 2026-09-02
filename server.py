@@ -57,6 +57,7 @@ _gui_log_cb    = None
 _gui_status_cb = None
 _connected_ips = {}
 _server_loadout = [None] * 11
+_stratagem_key  = "ctrl"  # tecla configurável pelo usuário
 
 def _notify_log(msg):
     if _gui_log_cb:
@@ -193,15 +194,16 @@ STRATAGEMS = {
 }
 
 def execute_stratagem(keys):
-    time.sleep(0.1)
-    pyautogui.keyDown("ctrl")
-    time.sleep(0.1)
+    timetosleep = 0.05
+    time.sleep(timetosleep)
+    pyautogui.keyDown(_stratagem_key)
+    time.sleep(timetosleep)
     for key in keys[1:]:
         pyautogui.keyDown(key)
-        time.sleep(0.1)
+        time.sleep(timetosleep)
         pyautogui.keyUp(key)
-        time.sleep(0.1)
-    pyautogui.keyUp("ctrl")
+        time.sleep(timetosleep)
+    pyautogui.keyUp(_stratagem_key)
 
 @app.route("/lang")
 def lang_route():
@@ -242,64 +244,35 @@ def stratagem(name):
     return jsonify({"ok": True, "stratagem": name})
 
 def _start_hotkey_listener():
-    from pynput import keyboard
+    import ctypes
+    # VK codes: F5=0x74 F6=0x75 F7=0x76 F8=0x77
+    HOTKEYS = {0x74: 0, 0x75: 1, 0x76: 2, 0x77: 3}
+    prev = {vk: False for vk in HOTKEYS}
 
-    HOTKEYS = {
-        keyboard.Key.f1: 0,
-        keyboard.Key.f2: 1,
-        keyboard.Key.f3: 2,
-        keyboard.Key.f4: 3,
+    def _loop():
+        while True:
+            for vk, slot in HOTKEYS.items():
+                pressed = bool(ctypes.windll.user32.GetAsyncKeyState(vk) & 0x8000)
+                if pressed and not prev[vk]:
+                    try:
+                        entry = _server_loadout[slot]
+                    except (IndexError, TypeError):
+                        entry = None
+                    if entry and isinstance(entry, dict):
+                        name = entry.get("id")
+                        if name in STRATAGEMS:
+                            now   = datetime.now().strftime("%H:%M:%S")
+                            label = name.replace("_", " ").title()
+                            fnum  = list(HOTKEYS.keys()).index(vk) + 5
+                            _notify_log(f"🕗 [{now}] | ⌨️  F{fnum} | 📲 {label}")
+                            threading.Thread(target=execute_stratagem, args=(STRATAGEMS[name],), daemon=True).start()
+                prev[vk] = pressed
+            time.sleep(0.02)
 
-        keyboard.Key.f5: 7,
-        keyboard.Key.f6: 8,
-        keyboard.Key.f7: 9,
-        keyboard.Key.f8: 10,
-
-        keyboard.Key.f9: 4,
-        keyboard.Key.f10: 5,
-        keyboard.Key.f11: 6,
-    }
-
-    def on_press(key):
-        slot = HOTKEYS.get(key)
-
-        if slot is None:
-            return
-
-        try:
-            entry = _server_loadout[slot]
-        except (IndexError, TypeError):
-            return
-
-        if not entry or not isinstance(entry, dict):
-            return
-
-        name = entry.get("id")
-
-        if name not in STRATAGEMS:
-            return
-
-        now = datetime.now().strftime("%H:%M:%S")
-        label = name.replace("_", " ").title()
-
-        # Mostra a tecla REAL que foi pressionada
-        key_name = str(key).replace("Key.", "").upper()
-
-        _notify_log(
-            f"🕗 [{now}] | ⌨️  {key_name} | 📲 {label}"
-        )
-
-        threading.Thread(
-            target=execute_stratagem,
-            args=(STRATAGEMS[name],),
-            daemon=True
-        ).start()
-
-    listener = keyboard.Listener(on_press=on_press)
-    listener.daemon = True
-    listener.start()
+    threading.Thread(target=_loop, daemon=True).start()
 
 if __name__ == "__main__":
+    import ctypes as _ctypes
     import tkinter as tk
     from PIL import Image, ImageTk
     import pystray
@@ -309,7 +282,7 @@ if __name__ == "__main__":
     DIM    = "#3a3a2a"
     GREEN  = "#39ff14"
     ORANGE = "#FFA500"
-    WHITE = "#FFFFFF"
+    WHITE  = "#FFFFFF"
     FONT   = "Courier"
 
     local_ip = get_local_ip()
@@ -319,7 +292,7 @@ if __name__ == "__main__":
     root.title(G["title"])
     root.configure(bg=BG)
     root.resizable(False, False)
-    root.geometry("460x580")
+    root.geometry("460x620")
     root.update()
     try:
         root.wm_iconbitmap(resource_path("icon.ico"))
@@ -375,6 +348,8 @@ if __name__ == "__main__":
         addr_lbl.configure(text=G2["address"].replace("{ip}", local_ip))
         status_var.set(G2["waiting"])
         log_lbl.configure(text=G2["log_title"])
+        key_lbl.configure(text=G2["key_label"])
+        capture_btn.configure(text=G2["key_capture"])
         popover.place_forget()
 
     for code, flag in [("pt", "Português"), ("en", "English"), ("es", "Espanol")]:
@@ -407,6 +382,57 @@ if __name__ == "__main__":
     root.bind("<Button-1>", lambda e: popover.place_forget()
               if popover.winfo_ismapped() and e.widget not in [gear_btn, popover] + list(popover.winfo_children())
               else None)
+
+    # --- Configuração da tecla de stratagem ---
+    key_frame = tk.Frame(root, bg=BG)
+    key_frame.pack(pady=(0, 6))
+
+    key_lbl = tk.Label(key_frame, text=G["key_label"], font=(FONT, 8), bg=BG, fg=DIM)
+    key_lbl.pack(side="left", padx=(0, 6))
+
+    key_var = tk.StringVar(value=_stratagem_key)
+    key_display = tk.Label(key_frame, textvariable=key_var,
+                           font=(FONT, 9, "bold"), bg="#161c27", fg=YELLOW,
+                           width=10, relief="flat", padx=6, pady=2)
+    key_display.pack(side="left", padx=(0, 6))
+
+    _capturing = False
+
+    def start_capture():
+        global _capturing
+        _capturing = True
+        key_var.set("...")
+        capture_btn.configure(state="disabled")
+
+    def on_key_capture(event):
+        global _capturing, _stratagem_key
+        if not _capturing:
+            return
+        _capturing = False
+
+        # Mapeia nomes especiais do tkinter para pyautogui
+        special = {
+            "control_l": "ctrl", "control_r": "ctrl",
+            "alt_l": "alt", "alt_r": "alt",
+            "shift_l": "shift", "shift_r": "shift",
+            "super_l": "win", "super_r": "win",
+        }
+        raw = event.keysym.lower()
+        key = special.get(raw, raw)
+        _stratagem_key = key
+        key_var.set(key.upper())
+        capture_btn.configure(state="normal")
+        return "break"
+
+    capture_btn = tk.Button(
+        key_frame, text=G["key_capture"], font=(FONT, 8), bg="#1a2030", fg=YELLOW,
+        relief="flat", bd=0, cursor="hand2", padx=6, pady=2,
+        activebackground="#2a3040", activeforeground=WHITE,
+        command=start_capture
+    )
+    capture_btn.pack(side="left")
+
+    root.bind("<KeyPress>", on_key_capture)
 
     # --- Status ---
     status_var = tk.StringVar(value=G["waiting"])
