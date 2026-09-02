@@ -3,4 +3,3 @@ flask
 pyautogui
 pillow
 pystray
-pynput
