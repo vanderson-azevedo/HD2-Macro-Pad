@@ -194,15 +194,14 @@ STRATAGEMS = {
 }
 
 def execute_stratagem(keys):
-    timetosleep = 0.05
-    time.sleep(timetosleep)
+    time.sleep(0.1)
     pyautogui.keyDown(_stratagem_key)
-    time.sleep(timetosleep)
+    time.sleep(0.1)
     for key in keys[1:]:
         pyautogui.keyDown(key)
-        time.sleep(timetosleep)
+        time.sleep(0.1)
         pyautogui.keyUp(key)
-        time.sleep(timetosleep)
+        time.sleep(0.1)
     pyautogui.keyUp(_stratagem_key)
 
 @app.route("/lang")
@@ -246,7 +245,7 @@ def stratagem(name):
 def _start_hotkey_listener():
     import ctypes
     # VK codes: F5=0x74 F6=0x75 F7=0x76 F8=0x77
-    HOTKEYS = {0x74: 0, 0x75: 1, 0x76: 2, 0x77: 3}
+    HOTKEYS = {0x74: 7, 0x75: 8, 0x76: 9, 0x77: 10, 0x78: 0, 0x79: 1, 0x7A: 2}
     prev = {vk: False for vk in HOTKEYS}
 
     def _loop():
@@ -348,8 +347,8 @@ if __name__ == "__main__":
         addr_lbl.configure(text=G2["address"].replace("{ip}", local_ip))
         status_var.set(G2["waiting"])
         log_lbl.configure(text=G2["log_title"])
-        key_lbl.configure(text=G2["key_label"])
-        capture_btn.configure(text=G2["key_capture"])
+        if "key_label" in G2:  key_lbl.configure(text=G2["key_label"])
+        if "key_capture" in G2: capture_btn.configure(text=G2["key_capture"])
         popover.place_forget()
 
     for code, flag in [("pt", "Português"), ("en", "English"), ("es", "Espanol")]:
