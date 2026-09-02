@@ -6,7 +6,9 @@
     "connected":      "🟢 | Device connected: {ip}",
     "log_title":      "📜 | FIRE LOG",
     "tray_open":      "Open",
-    "tray_quit":      "Quit"
+    "tray_quit":      "Quit",
+    "key_label":      "Key:",
+    "key_capture":    "Capture"
   },
   "web": {
     "tagline":        "★ Super Earth Tactical Command ★",
