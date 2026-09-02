@@ -6,7 +6,9 @@
     "connected":      "🟢 | Dispositivo conectado: {ip}",
     "log_title":      "📜 | REGISTRO DE DISPAROS",
     "tray_open":      "Abrir",
-    "tray_quit":      "Salir"
+    "tray_quit":      "Salir",
+    "key_label":      "Tecla:",
+    "key_capture":    "Capturar"
   },
   "web": {
     "tagline":        "★ Super Earth Tactical Command ★",
