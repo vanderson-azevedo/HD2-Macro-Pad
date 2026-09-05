@@ -85,6 +85,7 @@ STRATAGEMS = {
     "eagle_110mm":          ["ctrl", "w", "d", "w", "a"],
     "eagle_strafing":       ["ctrl", "w", "d", "d"],
     "eagle_rearm":          ["ctrl", "w", "w", "a", "w", "d"],
+    "eagle_gas_airstrike":  ["ctrl", "w", "d", "a", "d"],
     # Orbital
     "orbital_precision":    ["ctrl", "d", "d", "w"],
     "orbital_laser":        ["ctrl", "d", "s", "w", "d", "s"],

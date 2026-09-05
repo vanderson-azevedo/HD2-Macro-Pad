@@ -210,12 +210,20 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('offline-retry').textContent = t.offline_retry;
       document.querySelector('footer').innerHTML = t.footer;
 
-      const sectionKeys = [
-        'section_eagle', 'section_orbital', 'section_sentries', 'section_defense',
-        'section_weapons', 'section_backpacks', 'section_exo', 'section_essentials', 'section_mission'
-      ];
-      document.querySelectorAll('.section-title').forEach((el, i) => {
-        if (sectionKeys[i]) el.childNodes[0].textContent = t[sectionKeys[i]];
+      const sectionKeyMap = {
+        'essencials':       'section_essentials',
+        'missions':         'section_mission',
+        'heavy_weapons':    'section_weapons',
+        'orbitals':         'section_orbital',
+        'eagles':           'section_eagle',
+        'sentinels':        'section_sentries',
+        'defense_mines':    'section_defense',
+        'backpacks':        'section_backpacks',
+        'exosuits_vehicles':'section_exo',
+      };
+      document.querySelectorAll('.section-title').forEach(el => {
+        const key = sectionKeyMap[el.id];
+        if (key && t[key]) el.childNodes[0].textContent = t[key];
       });
 
       document.querySelectorAll('.slot:not(.filled) span:last-child').forEach(el => {

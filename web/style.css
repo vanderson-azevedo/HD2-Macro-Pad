@@ -203,11 +203,17 @@ main {
 
 .slots-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
   gap: 6px;
-  justify-content: center;
   max-width: 800px;
   margin: 0 auto;
+}
+
+.slots-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
 }
 
 .slot {
@@ -224,6 +230,23 @@ main {
   transition: all 0.15s ease;
   -webkit-tap-highlight-color: transparent;
   clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%, 0 10%);
+}
+
+.slot-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.slot .hotkey-label,
+.slot-wrapper .hotkey-label {
+  font-size: 0.55rem;
+  color: var(--hd-yellow);
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0.8;
+  pointer-events: none;
 }
 
 .slot span {

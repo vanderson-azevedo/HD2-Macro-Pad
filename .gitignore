@@ -8,6 +8,7 @@
 
 # ImageFiles
 *.png
+*.jpg
 
 # ServerSpecFiles
 .spec

@@ -32,23 +32,109 @@
 <div id="loadout">
   <div class="loadout-label">Equipados — toque para usar</div>
   <div class="slots-container">
-    <div class="slot" data-slot="0"><span class="remove">✕</span><span>vazio</span></div>
-    <div class="slot" data-slot="1"><span class="remove">✕</span><span>vazio</span></div>
-    <div class="slot" data-slot="2"><span class="remove">✕</span><span>vazio</span></div>
-    <div class="slot" data-slot="3"><span class="remove">✕</span><span>vazio</span></div>
-    <div class="slot" data-slot="4"><span class="remove">✕</span><span>vazio</span></div>
-    <div class="slot" data-slot="5"><span class="remove">✕</span><span>vazio</span></div>
-    <div class="slot" data-slot="6"><span class="remove">✕</span><span>vazio</span></div>
-    <div class="slot" data-slot="7"><span class="remove">✕</span><span>vazio</span></div>
-    <div class="slot" data-slot="8"><span class="remove">✕</span><span>vazio</span></div>
-    <div class="slot" data-slot="9"><span class="remove">✕</span><span>vazio</span></div>
-    <div class="slot" data-slot="10"><span class="remove">✕</span><span>vazio</span></div>
+    <div class="slots-row">
+      <div class="slot-wrapper"><span class="hotkey-label">F9</span><div class="slot" data-slot="0"><span class="remove">✕</span><span>vazio</span></div></div>
+      <div class="slot-wrapper"><span class="hotkey-label">F10</span><div class="slot" data-slot="1"><span class="remove">✕</span><span>vazio</span></div></div>
+      <div class="slot-wrapper"><span class="hotkey-label">F11</span><div class="slot" data-slot="2"><span class="remove">✕</span><span>vazio</span></div></div>
+      <div class="slot-wrapper"><span class="hotkey-label">•</span><div class="slot" data-slot="3"><span class="remove">✕</span><span>vazio</span></div></div>
+      <div class="slot-wrapper"><span class="hotkey-label">•</span><div class="slot" data-slot="4"><span class="remove">✕</span><span>vazio</span></div></div>
+      <div class="slot-wrapper"><span class="hotkey-label">•</span><div class="slot" data-slot="5"><span class="remove">✕</span><span>vazio</span></div></div>
+      <div class="slot-wrapper"><span class="hotkey-label">•</span><div class="slot" data-slot="6"><span class="remove">✕</span><span>vazio</span></div></div>
+    </div>
+    <div class="slots-row">
+      <div class="slot-wrapper"><span class="hotkey-label">F5</span><div class="slot" data-slot="7"><span class="remove">✕</span><span>vazio</span></div></div>
+      <div class="slot-wrapper"><span class="hotkey-label">F6</span><div class="slot" data-slot="8"><span class="remove">✕</span><span>vazio</span></div></div>
+      <div class="slot-wrapper"><span class="hotkey-label">F7</span><div class="slot" data-slot="9"><span class="remove">✕</span><span>vazio</span></div></div>
+      <div class="slot-wrapper"><span class="hotkey-label">F8</span><div class="slot" data-slot="10"><span class="remove">✕</span><span>vazio</span></div></div>
+    </div>
   </div>
 </div>
 
 <main>
   <div class="section">
-    <div class="section-title">🦅 Eagle</div>
+    <div class="section-title" id="essencials">🆘 Essenciais</div>
+    <div class="grid">
+      <div class="card" data-id="reinforce" data-name="Reinforce"><img src="icons/Reinforce_Stratagem_Icon_Background.svg"><span>Reinforce</span></div>
+      <div class="card" data-id="resupply" data-name="Resupply"><img src="icons/Resupply_Stratagem_Icon_Background.svg"><span>Resupply</span></div>
+      <div class="card" data-id="sos_beacon" data-name="SOS Beacon"><img src="icons/SOS_Beacon_Stratagem_Icon_Background.svg"><span>SOS Beacon</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" id="missions">🎯 Missão</div>
+    <div class="grid">
+      <div class="card" data-id="seismic_probe" data-name="Seismic Probe"><img src="icons/Seismic_Probe_Stratagem_Icon_Background.svg"><span>Seismic Probe</span></div>
+      <div class="card" data-id="upload_data" data-name="SSSD Delivery"><img src="icons/Upload_Data_Stratagem_Icon_Background.svg"><span>SSSD Delivery</span></div>
+      <div class="card" data-id="dark_fluid_vessel" data-name="Dark Fluid Vessel"><img src="icons/Dark_Fluid_Vessel_Stratagem_Icon_Background.svg"><span>Dark Fluid Vessel</span></div>
+      <div class="card" data-id="drill" data-name="Prospecting Drill"><img src="icons/Drill_Stratagem_Icon_Background.svg"><span>Drill</span></div>
+      <div class="card" data-id="cargo_container" data-name="Cargo Container"><img src="icons/Cargo_Container_Stratagem_Icon_Background.svg"><span>Cargo Container</span></div>
+      <div class="card" data-id="super_earth_flag" data-name="Super Earth Flag"><img src="icons/Super_Earth_Flag_Stratagem_Icon_Background.svg"><span>SE Flag</span></div>
+      <div class="card" data-id="seaf_artillery" data-name="SEAF Artillery"><img src="icons/SEAF_Artillery_Stratagem_Icon_Background.svg"><span>SEAF Artillery</span></div>
+      <div class="card" data-id="call_super_destroyer" data-name="Call In Super Destroyer"><img src="icons/Call_In_Super_Destroyer_Stratagem_Icon_Background.svg"><span>Super Destroyer</span></div>
+      <div class="card" data-id="hellbomb" data-name="NUX-223 Hellbomb"><img src="icons/Hellbomb_Stratagem_Icon_Background.svg"><span>Hellbomb</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" id="heavy_weapons">🔫 Armas Pesadas</div>
+    <div class="grid">
+      <div class="card" data-id="machine_gun" data-name="MG-43 Machine Gun"><img src="icons/Machine_Gun_Stratagem_Icon_Background.svg"><span>Machine Gun</span></div>
+      <div class="card" data-id="anti_materiel_rifle" data-name="APW-1 Anti-Materiel Rifle"><img src="icons/Anti-Materiel_Rifle_Stratagem_Icon_Background.svg"><span>AM Rifle</span></div>
+      <div class="card" data-id="stalwart" data-name="M-105 Stalwart"><img src="icons/Stalwart_Stratagem_Icon_Background.svg"><span>Stalwart</span></div>
+      <div class="card" data-id="expendable_at" data-name="EAT-17 Expendable Anti-Tank"><img src="icons/Expendable_Anti-Tank_Stratagem_Icon_Background.svg"><span>EAT</span></div>
+      <div class="card" data-id="recoilless_rifle" data-name="GR-8 Recoilless Rifle"><img src="icons/Recoilless_Rifle_Stratagem_Icon_Background.svg"><span>Recoilless Rifle</span></div>
+      <div class="card" data-id="flamethrower" data-name="FLAM-40 Flamethrower"><img src="icons/Flamethrower_Stratagem_Icon_Background.svg"><span>Flamethrower</span></div>
+      <div class="card" data-id="autocannon" data-name="AC-8 Autocannon"><img src="icons/Autocannon_Stratagem_Icon_Background.svg"><span>Autocannon</span></div>
+      <div class="card" data-id="hmg" data-name="MG-206 Heavy Machine Gun"><img src="icons/Heavy_Machine_Gun_Stratagem_Icon_Background.svg"><span>Heavy MG</span></div>
+      <div class="card" data-id="airburst_launcher" data-name="RL-77 Airburst Rocket Launcher"><img src="icons/Airburst_Rocket_Launcher_Stratagem_Icon_Background.svg"><span>Airburst Launcher</span></div>
+      <div class="card" data-id="commando" data-name="MLS-4X Commando"><img src="icons/Commando_Stratagem_Icon_Background.svg"><span>Commando</span></div>
+      <div class="card" data-id="railgun" data-name="RS-422 Railgun"><img src="icons/Railgun_Stratagem_Icon_Background.svg"><span>Railgun</span></div>
+      <div class="card" data-id="spear" data-name="FAF-14 Spear"><img src="icons/Spear_Stratagem_Icon_Background.svg"><span>Spear</span></div>
+      <div class="card" data-id="wasp_launcher" data-name="W.A.S.P. Launcher"><img src="icons/W.A.S.P._Launcher_Stratagem_Icon_Background.svg"><span>W.A.S.P.</span></div>
+      <!-- ABAIXO ADQUIRIDAS POR WARPACK -->
+      <div class="card" data-id="grenade_launcher" data-name="GL-21 Grenade Launcher"><img src="icons/Grenade_Launcher_Stratagem_Icon_Background.svg"><span>Grenade Launcher</span></div>
+      <div class="card" data-id="laser_cannon" data-name="LAS-98 Laser Cannon"><img src="icons/Laser_Cannon_Stratagem_Icon_Background.svg"><span>Laser Cannon</span></div>
+      <div class="card" data-id="arc_thrower" data-name="ARC-3 Arc Thrower"><img src="icons/Arc_Thrower_Stratagem_Icon_Background.svg"><span>Arc Thrower</span></div>
+      <div class="card" data-id="quasar" data-name="LAS-99 Quasar Cannon"><img src="icons/Quasar_Cannon_Stratagem_Icon_Background.svg"><span>Quasar Cannon</span></div>
+      <div class="card" data-id="speargun" data-name="S-11 Speargun"><img src="icons/Speargun_Stratagem_Icon_Background.svg"><span>Speargun</span></div>
+      <div class="card" data-id="defoliation_tool" data-name="CQC-9 Defoliation Tool"><img src="icons/Defoliation_Tool_Stratagem_Icon_Background.svg"><span>Defoliation Tool</span></div>
+      <div class="card" data-id="de_escalator" data-name="GL-52 De-Escalator"><img src="icons/De-Escalator_Stratagem_Icon_Background.svg"><span>De-Escalator</span></div>
+      <div class="card" data-id="expendable_napalm" data-name="EAT-700 Expendable Napalm"><img src="icons/Expendable_Napalm_Stratagem_Icon_Background.svg"><span>Exp. Napalm</span></div>
+      <div class="card" data-id="sterilizer" data-name="TX-41 Sterilizer"><img src="icons/Sterilizer_Stratagem_Icon_Background.svg"><span>Sterilizer</span></div>
+      <div class="card" data-id="leveller" data-name="EAT-411 Leveller"><img src="icons/Leveller_Stratagem_Icon_Background.svg"><span>Leveller</span></div>
+      <div class="card" data-id="belt_grenade_launcher" data-name="GL-28 Belt-Fed Grenade Launcher"><img src="icons/Belt-Fed_Grenade_Launcher_Stratagem_Icon_Background.svg"><span>Belt-Fed GL</span></div>
+      <div class="card" data-id="solo_silo" data-name="MS-11 Solo Silo"><img src="icons/Solo_Silo_Stratagem_Icon_Background.svg"><span>Solo Silo</span></div>
+      <div class="card" data-id="cremator" data-name="B/FLAM-80 Cremator"><img src="icons/Cremator_Stratagem_Icon_Background.svg"><span>Cremator</span></div>
+      <div class="card" data-id="maxigun" data-name="M-1000 Maxigun"><img src="icons/Maxigun_Stratagem_Icon_Background.svg"><span>Maxigun</span></div>
+      <div class="card" data-id="one_true_flag" data-name="CQC-1 One True Flag"><img src="icons/One_True_Flag_Stratagem_Icon_Background.svg"><span>One True Flag</span></div>
+      <div class="card" data-id="meltagun" data-name="40-K Meltagun"><img src="icons/Meltagun_Stratagem_Icon_Background.svg"><span>Meltagun</span></div>
+      <div class="card" data-id="breaching_hammer" data-name="CQC-20 Breaching Hammer"><img src="icons/Breaching_Hammer_Stratagem_Icon_Background.svg"><span>Breaching Hammer</span></div>
+      <div class="card" data-id="epoch" data-name="PLAS-45 Epoch"><img src="icons/Epoch_Stratagem_Icon_Background.svg"><span>Epoch</span></div>
+      <div class="card" data-id="bullet_storm" data-name="MGX-42 Bullet Storm"><img src="icons/Bullet_Storm_Stratagem_Icon_Background.svg"><span>Bullet Storm</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" id="orbitals">🛰️ Orbital</div>
+    <div class="grid">
+      <div class="card" data-id="orbital_gatling" data-name="Orbital Gatling Barrage"><img src="icons/Orbital_Gatling_Barrage_Stratagem_Icon_Background.svg"><span>Gatling Barrage</span></div>
+      <div class="card" data-id="orbital_airburst" data-name="Orbital Airburst Strike"><img src="icons/Orbital_Airburst_Strike_Stratagem_Icon_Background.svg"><span>Airburst Strike</span></div>
+      <div class="card" data-id="orbital_120mm" data-name="Orbital 120MM HE Barrage"><img src="icons/Orbital_120mm_HE_Barrage_Stratagem_Icon_Background.svg"><span>120MM Barrage</span></div>
+      <div class="card" data-id="orbital_380mm" data-name="Orbital 380MM HE Barrage"><img src="icons/Orbital_380mm_HE_Barrage_Stratagem_Icon_Background.svg"><span>380MM Barrage</span></div>
+      <div class="card" data-id="orbital_walking" data-name="Orbital Walking Barrage"><img src="icons/Orbital_Walking_Barrage_Stratagem_Icon_Background.svg"><span>Walking Barrage</span></div>
+      <div class="card" data-id="orbital_laser" data-name="Orbital Laser"><img src="icons/Orbital_Laser_Stratagem_Icon_Background.svg"><span>Orbital Laser</span></div>
+      <div class="card" data-id="orbital_napalm" data-name="Orbital Napalm Barrage"><img src="icons/Orbital_Napalm_Barrage_Stratagem_Icon_Background.svg"><span>Napalm Barrage</span></div>
+      <div class="card" data-id="orbital_railcannon" data-name="Orbital Railcannon Strike"><img src="icons/Orbital_Railcannon_Strike_Stratagem_Icon_Background.svg"><span>Railcannon Strike</span></div>
+      <div class="card" data-id="orbital_precision" data-name="Orbital Precision Strike"><img src="icons/Orbital_Precision_Strike_Stratagem_Icon_Background.svg"><span>Precision Strike</span></div>
+      <div class="card" data-id="orbital_gas" data-name="Orbital Gas Strike"><img src="icons/Orbital_Gas_Strike_Stratagem_Icon_Background.svg"><span>Gas Strike</span></div>
+      <div class="card" data-id="orbital_ems" data-name="Orbital EMS Strike"><img src="icons/Orbital_EMS_Strike_Stratagem_Icon_Background.svg"><span>EMS Strike</span></div>
+      <div class="card" data-id="orbital_smoke" data-name="Orbital Smoke Strike"><img src="icons/Orbital_Smoke_Strike_Stratagem_Icon_Background.svg"><span>Smoke Strike</span></div>
+      <!-- <div class="card" data-id="orbital_illumination" data-name="Orbital Illumination Flare"><img src="icons/Orbital_Illumination_Flare_Stratagem_Icon_Background.svg"><span>Illumination Flare</span></div> -->
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" id="eagles">🦅 Eagle</div>
     <div class="grid">
       <div class="card" data-id="eagle_strafing" data-name="Eagle Strafing Run"><img src="icons/Eagle_Strafing_Run_Stratagem_Icon_Background.svg"><span>Strafing Run</span></div>
       <div class="card" data-id="eagle_airstrike" data-name="Eagle Airstrike"><img src="icons/Eagle_Airstrike_Stratagem_Icon_Background.svg"><span>Airstrike</span></div>
@@ -57,31 +143,13 @@
       <div class="card" data-id="eagle_110mm" data-name="Eagle 110MM Rocket Pods"><img src="icons/Eagle_110mm_Rocket_Pods_Stratagem_Icon_Background.svg"><span>110MM Rockets</span></div>
       <div class="card" data-id="eagle_500kg" data-name="Eagle 500KG Bomb"><img src="icons/Eagle_500kg_Bomb_Stratagem_Icon_Background.svg"><span>500KG Bomb</span></div>
       <div class="card" data-id="eagle_smoke" data-name="Eagle Smoke Strike"><img src="icons/Eagle_Smoke_Strike_Stratagem_Icon_Background.svg"><span>Smoke Strike</span></div>
+      <div class="card" data-id="eagle_gas_airstrike" data-name="Eagle Gas Airstrike"><img src="icons/Eagle_Stratagem_Gas_Strike_Icon_Background.svg"><span>Gas Airstrike</span></div>
       <div class="card" data-id="eagle_rearm" data-name="Eagle Rearm"><img src="icons/Eagle_Rearm_Stratagem_Icon_Background.svg"><span>Eagle Rearm</span></div>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-title">🛰️ Orbital</div>
-    <div class="grid">
-      <div class="card" data-id="orbital_gatling" data-name="Orbital Gatling Barrage"><img src="icons/Orbital_Gatling_Barrage_Stratagem_Icon_Background.svg"><span>Gatling Barrage</span></div>
-      <div class="card" data-id="orbital_airburst" data-name="Orbital Airburst Strike"><img src="icons/Orbital_Airburst_Strike_Stratagem_Icon_Background.svg"><span>Airburst Strike</span></div>
-      <div class="card" data-id="orbital_120mm" data-name="Orbital 120MM HE Barrage"><img src="icons/Orbital_120mm_HE_Barrage_Stratagem_Icon_Background.svg"><span>120MM Barrage</span></div>
-      <div class="card" data-id="orbital_380mm" data-name="Orbital 380MM HE Barrage"><img src="icons/Orbital_380mm_HE_Barrage_Stratagem_Icon_Background.svg"><span>380MM Barrage</span></div>
-      <div class="card" data-id="orbital_walking" data-name="Orbital Walking Barrage"><img src="icons/Orbital_Walking_Barrage_Stratagem_Icon_Background.svg"><span>Walking Barrage</span></div>
-      <div class="card" data-id="orbital_precision" data-name="Orbital Precision Strike"><img src="icons/Orbital_Precision_Strike_Stratagem_Icon_Background.svg"><span>Precision Strike</span></div>
-      <div class="card" data-id="orbital_gas" data-name="Orbital Gas Strike"><img src="icons/Orbital_Gas_Strike_Stratagem_Icon_Background.svg"><span>Gas Strike</span></div>
-      <div class="card" data-id="orbital_ems" data-name="Orbital EMS Strike"><img src="icons/Orbital_EMS_Strike_Stratagem_Icon_Background.svg"><span>EMS Strike</span></div>
-      <div class="card" data-id="orbital_smoke" data-name="Orbital Smoke Strike"><img src="icons/Orbital_Smoke_Strike_Stratagem_Icon_Background.svg"><span>Smoke Strike</span></div>
-      <div class="card" data-id="orbital_napalm" data-name="Orbital Napalm Barrage"><img src="icons/Orbital_Napalm_Barrage_Stratagem_Icon_Background.svg"><span>Napalm Barrage</span></div>
-      <div class="card" data-id="orbital_laser" data-name="Orbital Laser"><img src="icons/Orbital_Laser_Stratagem_Icon_Background.svg"><span>Orbital Laser</span></div>
-      <div class="card" data-id="orbital_railcannon" data-name="Orbital Railcannon Strike"><img src="icons/Orbital_Railcannon_Strike_Stratagem_Icon_Background.svg"><span>Railcannon Strike</span></div>
-      <div class="card" data-id="orbital_illumination" data-name="Orbital Illumination Flare"><img src="icons/Orbital_Illumination_Flare_Stratagem_Icon_Background.svg"><span>Illumination Flare</span></div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">🤖 Sentinelas</div>
+    <div class="section-title" id="sentinels">🤖 Sentinelas</div>
     <div class="grid">
       <div class="card" data-id="machine_gun_sentry" data-name="Machine Gun Sentry"><img src="icons/Machine_Gun_Sentry_Stratagem_Icon_Background.svg"><span>MG Sentry</span></div>
       <div class="card" data-id="gatling_sentry" data-name="Gatling Sentry"><img src="icons/Gatling_Sentry_Stratagem_Icon_Background.svg"><span>Gatling Sentry</span></div>
@@ -97,7 +165,7 @@
   </div>
 
   <div class="section">
-    <div class="section-title">🛡️ Defesa &amp; Minas</div>
+    <div class="section-title" id="defense_mines">🛡️ Defesa &amp; Minas</div>
     <div class="grid">
       <div class="card" data-id="hmg_emplacement" data-name="HMG Emplacement"><img src="icons/HMG_Emplacement_Stratagem_Icon_Background.svg"><span>HMG Emplacement</span></div>
       <div class="card" data-id="anti_tank_emplacement" data-name="Anti-Tank Emplacement"><img src="icons/Anti-Tank_Emplacement_Stratagem_Icon_Background.svg"><span>AT Emplacement</span></div>
@@ -111,49 +179,11 @@
   </div>
 
   <div class="section">
-    <div class="section-title">🔫 Armas Pesadas</div>
-    <div class="grid">
-      <div class="card" data-id="machine_gun" data-name="MG-43 Machine Gun"><img src="icons/Machine_Gun_Stratagem_Icon_Background.svg"><span>Machine Gun</span></div>
-      <div class="card" data-id="stalwart" data-name="M-105 Stalwart"><img src="icons/Stalwart_Stratagem_Icon_Background.svg"><span>Stalwart</span></div>
-      <div class="card" data-id="expendable_at" data-name="EAT-17 Expendable Anti-Tank"><img src="icons/Expendable_Anti-Tank_Stratagem_Icon_Background.svg"><span>EAT</span></div>
-      <div class="card" data-id="grenade_launcher" data-name="GL-21 Grenade Launcher"><img src="icons/Grenade_Launcher_Stratagem_Icon_Background.svg"><span>Grenade Launcher</span></div>
-      <div class="card" data-id="laser_cannon" data-name="LAS-98 Laser Cannon"><img src="icons/Laser_Cannon_Stratagem_Icon_Background.svg"><span>Laser Cannon</span></div>
-      <div class="card" data-id="anti_materiel_rifle" data-name="APW-1 Anti-Materiel Rifle"><img src="icons/Anti-Materiel_Rifle_Stratagem_Icon_Background.svg"><span>AM Rifle</span></div>
-      <div class="card" data-id="recoilless_rifle" data-name="GR-8 Recoilless Rifle"><img src="icons/Recoilless_Rifle_Stratagem_Icon_Background.svg"><span>Recoilless Rifle</span></div>
-      <div class="card" data-id="flamethrower" data-name="FLAM-40 Flamethrower"><img src="icons/Flamethrower_Stratagem_Icon_Background.svg"><span>Flamethrower</span></div>
-      <div class="card" data-id="hmg" data-name="MG-206 Heavy Machine Gun"><img src="icons/Heavy_Machine_Gun_Stratagem_Icon_Background.svg"><span>Heavy MG</span></div>
-      <div class="card" data-id="autocannon" data-name="AC-8 Autocannon"><img src="icons/Autocannon_Stratagem_Icon_Background.svg"><span>Autocannon</span></div>
-      <div class="card" data-id="arc_thrower" data-name="ARC-3 Arc Thrower"><img src="icons/Arc_Thrower_Stratagem_Icon_Background.svg"><span>Arc Thrower</span></div>
-      <div class="card" data-id="quasar" data-name="LAS-99 Quasar Cannon"><img src="icons/Quasar_Cannon_Stratagem_Icon_Background.svg"><span>Quasar Cannon</span></div>
-      <div class="card" data-id="airburst_launcher" data-name="RL-77 Airburst Rocket Launcher"><img src="icons/Airburst_Rocket_Launcher_Stratagem_Icon_Background.svg"><span>Airburst Launcher</span></div>
-      <div class="card" data-id="commando" data-name="MLS-4X Commando"><img src="icons/Commando_Stratagem_Icon_Background.svg"><span>Commando</span></div>
-      <div class="card" data-id="spear" data-name="FAF-14 Spear"><img src="icons/Spear_Stratagem_Icon_Background.svg"><span>Spear</span></div>
-      <div class="card" data-id="railgun" data-name="RS-422 Railgun"><img src="icons/Railgun_Stratagem_Icon_Background.svg"><span>Railgun</span></div>
-      <div class="card" data-id="wasp_launcher" data-name="W.A.S.P. Launcher"><img src="icons/W.A.S.P._Launcher_Stratagem_Icon_Background.svg"><span>W.A.S.P.</span></div>
-      <div class="card" data-id="speargun" data-name="S-11 Speargun"><img src="icons/Speargun_Stratagem_Icon_Background.svg"><span>Speargun</span></div>
-      <div class="card" data-id="defoliation_tool" data-name="CQC-9 Defoliation Tool"><img src="icons/Defoliation_Tool_Stratagem_Icon_Background.svg"><span>Defoliation Tool</span></div>
-      <div class="card" data-id="de_escalator" data-name="GL-52 De-Escalator"><img src="icons/De-Escalator_Stratagem_Icon_Background.svg"><span>De-Escalator</span></div>
-      <div class="card" data-id="expendable_napalm" data-name="EAT-700 Expendable Napalm"><img src="icons/Expendable_Napalm_Stratagem_Icon_Background.svg"><span>Exp. Napalm</span></div>
-      <div class="card" data-id="sterilizer" data-name="TX-41 Sterilizer"><img src="icons/Sterilizer_Stratagem_Icon_Background.svg"><span>Sterilizer</span></div>
-      <div class="card" data-id="leveller" data-name="EAT-411 Leveller"><img src="icons/Leveller_Stratagem_Icon_Background.svg"><span>Leveller</span></div>
-      <div class="card" data-id="belt_grenade_launcher" data-name="GL-28 Belt-Fed Grenade Launcher"><img src="icons/Belt-Fed_Grenade_Launcher_Stratagem_Icon_Background.svg"><span>Belt-Fed GL</span></div>
-      <div class="card" data-id="c4_pack" data-name="C4 Pack"><img src="icons/C4_Pack_Stratagem_Icon_Background.svg"><span>C4 Pack</span></div>
-      <div class="card" data-id="solo_silo" data-name="MS-11 Solo Silo"><img src="icons/Solo_Silo_Stratagem_Icon_Background.svg"><span>Solo Silo</span></div>
-      <div class="card" data-id="cremator" data-name="B/FLAM-80 Cremator"><img src="icons/Cremator_Stratagem_Icon_Background.svg"><span>Cremator</span></div>
-      <div class="card" data-id="maxigun" data-name="M-1000 Maxigun"><img src="icons/Maxigun_Stratagem_Icon_Background.svg"><span>Maxigun</span></div>
-      <div class="card" data-id="one_true_flag" data-name="CQC-1 One True Flag"><img src="icons/One_True_Flag_Stratagem_Icon_Background.svg"><span>One True Flag</span></div>
-      <div class="card" data-id="meltagun" data-name="40-K Meltagun"><img src="icons/Meltagun_Stratagem_Icon_Background.svg"><span>Meltagun</span></div>
-      <div class="card" data-id="breaching_hammer" data-name="CQC-20 Breaching Hammer"><img src="icons/Breaching_Hammer_Stratagem_Icon_Background.svg"><span>Breaching Hammer</span></div>
-      <div class="card" data-id="epoch" data-name="PLAS-45 Epoch"><img src="icons/Epoch_Stratagem_Icon_Background.svg"><span>Epoch</span></div>
-      <div class="card" data-id="bullet_storm" data-name="MGX-42 Bullet Storm"><img src="icons/Bullet_Storm_Stratagem_Icon_Background.svg"><span>Bullet Storm</span></div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">🎒 Backpacks</div>
+    <div class="section-title" id="backpacks">🎒 Backpacks</div>
     <div class="grid">
       <div class="card" data-id="supply_pack" data-name="B-1 Supply Pack"><img src="icons/Supply_Pack_Stratagem_Icon_Background.svg"><span>Supply Pack</span></div>
       <div class="card" data-id="jump_pack" data-name="LIFT-850 Jump Pack"><img src="icons/Jump_Pack_Stratagem_Icon_Background.svg"><span>Jump Pack</span></div>
+      <div class="card" data-id="c4_pack" data-name="C4 Pack"><img src="icons/C4_Pack_Stratagem_Icon_Background.svg"><span>C4 Pack</span></div>
       <div class="card" data-id="ballistic_shield" data-name="SH-20 Ballistic Shield"><img src="icons/Ballistic_Shield_Backpack_Stratagem_Icon_Background.svg"><span>Ballistic Shield</span></div>
       <div class="card" data-id="guard_dog" data-name="AX/AR-23 Guard Dog"><img src="icons/Guard_Dog_Stratagem_Icon_Background.svg"><span>Guard Dog</span></div>
       <div class="card" data-id="rover" data-name="AX/LAS-5 Rover"><img src="icons/Rover_Stratagem_Icon_Background.svg"><span>Rover</span></div>
@@ -164,11 +194,12 @@
       <div class="card" data-id="hover_pack" data-name="LIFT-860 Hover Pack"><img src="icons/Hover_Pack_Stratagem_Icon_Background.svg"><span>Hover Pack</span></div>
       <div class="card" data-id="dog_breath" data-name="AX/TX-13 Dog Breath"><img src="icons/Dog_Breath_Stratagem_Icon_Background.svg"><span>Dog Breath</span></div>
       <div class="card" data-id="warp_pack" data-name="LIFT-182 Warp Pack"><img src="icons/Warp_Pack_Stratagem_Icon_Background.svg"><span>Warp Pack</span></div>
+      <div class="card" data-id="portable_hellbomb" data-name="B-100 Portable Hellbomb"><img src="icons/Portable_Hellbomb_Stratagem_Icon_Background.svg"><span>Portable Hellbomb</span></div>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-title">🦾 Exosuits &amp; Veículos</div>
+    <div class="section-title" id="exosuits_vehicles">🦾 Exosuits &amp; Veículos</div>
     <div class="grid">
       <div class="card" data-id="patriot_exosuit" data-name="EXO-45 Patriot Exosuit"><img src="icons/Patriot_Exosuit_Stratagem_Icon_Background.svg"><span>Patriot</span></div>
       <div class="card" data-id="emancipator_exosuit" data-name="EXO-49 Emancipator"><img src="icons/Emancipator_Exosuit_Stratagem_Icon_Background.svg"><span>Emancipator</span></div>
@@ -178,31 +209,6 @@
       <div class="card" data-id="fast_recon_vehicle" data-name="M-102 Gunner FRV"><img src="icons/Fast_Recon_Vehicle_Stratagem_Icon_Background.svg"><span>Gunner FRV</span></div>
       <div class="card" data-id="incinerator_frv" data-name="M-104 Incinerator FRV"><img src="icons/Incinerator_FRV_Stratagem_Icon_Background.svg"><span>Incinerator FRV</span></div>
       <div class="card" data-id="supply_frv" data-name="M-103 Supply FRV"><img src="icons/Supply_FRV_Stratagem_Icon_Background.svg"><span>Supply FRV</span></div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">🆘 Essenciais</div>
-    <div class="grid">
-      <div class="card" data-id="reinforce" data-name="Reinforce"><img src="icons/Reinforce_Stratagem_Icon_Background.svg"><span>Reinforce</span></div>
-      <div class="card" data-id="resupply" data-name="Resupply"><img src="icons/Resupply_Stratagem_Icon_Background.svg"><span>Resupply</span></div>
-      <div class="card" data-id="sos_beacon" data-name="SOS Beacon"><img src="icons/SOS_Beacon_Stratagem_Icon_Background.svg"><span>SOS Beacon</span></div>
-      <div class="card" data-id="hellbomb" data-name="NUX-223 Hellbomb"><img src="icons/Hellbomb_Stratagem_Icon_Background.svg"><span>Hellbomb</span></div>
-      <div class="card" data-id="super_earth_flag" data-name="Super Earth Flag"><img src="icons/Super_Earth_Flag_Stratagem_Icon_Background.svg"><span>SE Flag</span></div>
-      <div class="card" data-id="seaf_artillery" data-name="SEAF Artillery"><img src="icons/SEAF_Artillery_Stratagem_Icon_Background.svg"><span>SEAF Artillery</span></div>
-      <div class="card" data-id="call_super_destroyer" data-name="Call In Super Destroyer"><img src="icons/Call_In_Super_Destroyer_Stratagem_Icon_Background.svg"><span>Super Destroyer</span></div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">🎯 Missão</div>
-    <div class="grid">
-      <div class="card" data-id="seismic_probe" data-name="Seismic Probe"><img src="icons/Seismic_Probe_Stratagem_Icon_Background.svg"><span>Seismic Probe</span></div>
-      <div class="card" data-id="upload_data" data-name="SSSD Delivery"><img src="icons/Upload_Data_Stratagem_Icon_Background.svg"><span>SSSD Delivery</span></div>
-      <div class="card" data-id="dark_fluid_vessel" data-name="Dark Fluid Vessel"><img src="icons/Dark_Fluid_Vessel_Stratagem_Icon_Background.svg"><span>Dark Fluid Vessel</span></div>
-      <div class="card" data-id="drill" data-name="Prospecting Drill"><img src="icons/Drill_Stratagem_Icon_Background.svg"><span>Drill</span></div>
-      <div class="card" data-id="cargo_container" data-name="Cargo Container"><img src="icons/Cargo_Container_Stratagem_Icon_Background.svg"><span>Cargo Container</span></div>
-      <div class="card" data-id="portable_hellbomb" data-name="B-100 Portable Hellbomb"><img src="icons/Portable_Hellbomb_Stratagem_Icon_Background.svg"><span>Portable Hellbomb</span></div>
     </div>
   </div>
 </main>
